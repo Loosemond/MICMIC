@@ -9,11 +9,11 @@
 ; Replace with your application code
 .include <m128def.inc>
 
-;.cseg ; reset de vector
-;.org 0x0 ;defina a o sitio na memoria
+.cseg ; reset de vector
+.org 0x0 ;defina a o sitio na memoria
 		jmp main ;começa o programa na func main 
-;.cseg
-;.org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
+.cseg
+.org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
 ;------------------------------Inicialização----------------------------
 inic:		ldi r16,0b11111111;		vai servir para configurar as saidas e as entradas, temos de escrever todas a portas do PORTA  de uma vez so dai temos 8.
 			out DDRA,r16 ;			aqui é que se passa os valor em r16 para o PORTA ????
@@ -39,14 +39,19 @@ ciclo:
 
 		brne	fim					;
 
-		cbi		PORTC,3				; Coloca o porta A3 em 0
-		cbi		PORTC,4
+
+		ldi		r16,0b00001100 ;  Liga o led 3 e o 4
+		out		PORTC,r16
+
+	
 
 		jmp		ciclo
 
 fim:	
-		sbi		PORTC,3 ; Coloca a porta A3  a 1
-		sbi		PORTC,4 ;
+		ldi		r16,0b00000000 ;  apaga todos os leds
+		out		PORTC,r16
+		
+		jmp		ciclo
 		
 		
 
