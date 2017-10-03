@@ -20,7 +20,7 @@ inic:		ldi r16,0b11111111;		vai servir para configurar as saidas e as entradas, 
 
 			;ldi r16,0b11111111; Vai indicar que os led tao desligados pois 1 representa off
 			out DDRC,r16		;DDRC índica nos que é o PORTC
-
+			ldi r17,0b00000000;
 
 			ret						; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
@@ -36,44 +36,56 @@ main:
 
 						
 ciclo:
-		in		r16,PINA			;le PORTA para r16
-		;andi	r16,0b00000001		; ??	
-		;cpi		r16,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.
-
-		;brne	fim					;
-
-
-		;ldi		r16,0b00001000 ;  Liga o led 3 e o 4
-		lsl		r16 ;vai para a esquerda 
-		lsl		r16
-		lsl		r16
-		lsl		r16
-		out		PORTC,r16
-		;mov		r17,r16	; move os r
-
+		in		r17,PINA			;le PORTA para r16
+		mov		r16,r17
+				
+		cpi		r17,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.						;						
+		breq	inver2
 		
-		call	inver
-		add		r16,r18
-		out		PORTC,r16
-		;ror		r17	;roda para a direita
-		;add		r16,r17
+		cpi		r17,0b00000010		
+		breq	inver2
 		
-		;out		PORTC,r16
-		;ldi		r18,0b01000000
-		;out		PORTC,r18
-		;ror		r18
-		;asr		r18
-		;out		PORTC,r18
+		cpi		r17,0b00000100		
+		breq	inver2									
+			
+		cpi		r17,0b00001000		
+		breq	inver2	
+				
+		cpi		r17,0b0010000		
+		breq	clear
+												
+		jmp		ciclo			
 
-		jmp		ciclo
-
-fim:	
-		ldi		r16,0b00000000 ;  apaga todos os leds
+clear:	
+		ldi		r16,0b00000000 ;  apaga todos os leds serve para trocar o togle 
 		out		PORTC,r16
 		
 		jmp		ciclo
 		
 
+
+Inver2:
+		
+		swap	r16 ; troca os primeiros 4 bits pelos ultimos 	
+
+		bst		r16,4	;faz load do bit do r para T
+		bld		r16,3	; escreve o bit de T em r18	
+
+		bst		r16,5	
+		bld		r16,2
+
+		bst		r16,6	
+		bld		r16,1
+
+		
+		bst		r16,7	
+		bld		r16,0
+
+		out		PORTC,r16
+
+		jmp		ciclo
+
+				
 
 
 Inver:	
@@ -104,5 +116,5 @@ Inver:
 
 		ret
 
-inver2:
+
 		
