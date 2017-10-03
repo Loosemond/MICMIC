@@ -20,7 +20,7 @@ inic:		ldi r16,0b11111111;		vai servir para configurar as saidas e as entradas, 
 
 			;ldi r16,0b11111111; Vai indicar que os led tao desligados pois 1 representa off
 			out DDRC,r16		;DDRC índica nos que é o PORTC
-			ldi r17,0b00000000;
+			ldi r17,0b00000000	;limpa o r17
 
 			ret						; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
@@ -40,7 +40,7 @@ ciclo:
 		mov		r16,r17
 				
 		cpi		r17,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.						;						
-		breq	inver2
+		breq	inver2				; Caso r17=0b00000001 salta para inver2
 		
 		cpi		r17,0b00000010		
 		breq	inver2
@@ -51,7 +51,7 @@ ciclo:
 		cpi		r17,0b00001000		
 		breq	inver2	
 				
-		cpi		r17,0b0010000		
+		cpi		r17,0b0010000		; Apaga os leds 	
 		breq	clear
 												
 		jmp		ciclo			
@@ -66,9 +66,9 @@ clear:
 
 Inver2:
 		
-		swap	r16 ; troca os primeiros 4 bits pelos ultimos 	
+		swap	r16 ; troca os primeiros 4 bits pelos ultimos 	antes: 0000 0001	depois: 0001 0000
 
-		bst		r16,4	;faz load do bit do r para T
+		bst		r16,4	;faz load do bit do r para T   isto vai inverter metade dos bits no proprio registo
 		bld		r16,3	; escreve o bit de T em r18	
 
 		bst		r16,5	
@@ -80,7 +80,7 @@ Inver2:
 		
 		bst		r16,7	
 		bld		r16,0
-
+						; antes de inverter 0001 000 depois: 0001 1000 pois inverte no proprio registo 
 		out		PORTC,r16
 
 		jmp		ciclo
@@ -88,33 +88,6 @@ Inver2:
 				
 
 
-Inver:	
-		ldi		r18,0b00000000
-		bst		r16,0	;faz load do bit do r para T
-		bld		r18,7	; escreve o bit de T em r18	
-				
-		bst		r16,1	
-		bld		r18,6
-
-		bst		r16,2	
-		bld		r18,5
-
-		bst		r16,3	
-		bld		r18,4
-
-		bst		r16,4	
-		bld		r18,3
-
-		bst		r16,5	
-		bld		r18,2
-
-		bst		r16,6	
-		bld		r18,1
-
-		bst		r16,7	
-		bld		r18,0
-
-		ret
 
 
 		
