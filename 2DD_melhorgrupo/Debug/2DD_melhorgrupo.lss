@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.6  C:\Users\DEE\Desktop\Atmel\2DD_melhorgrupo\2DD_melhorgrupo\main.asm Wed Sep 27 11:00:03 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\Atmel Studio\7.0\MICMIC-master\2DD_melhorgrupo\main.asm Sat Sep 30 12:45:16 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\DEE\Desktop\Atmel\2DD_melhorgrupo\2DD_melhorgrupo\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\Casa\Documents\Atmel Studio\7.0\MICMIC-master\2DD_melhorgrupo\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\DEE\Desktop\Atmel\2DD_melhorgrupo\2DD_melhorgrupo\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\Casa\Documents\Atmel Studio\7.0\MICMIC-master\2DD_melhorgrupo\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
                                  
                                  ;
                                  
@@ -1301,31 +1301,76 @@ C:\Users\DEE\Desktop\Atmel\2DD_melhorgrupo\2DD_melhorgrupo\main.asm(10): Includi
 00004d bf0e                      		out		sph,r16
                                  
 00004e 940e 0046                 		call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  
+                                 
+                                 
+                                 						
                                  ciclo:
 000050 b309                      		in		r16,PINA			;le PORTA para r16
-000051 7001                      		andi	r16,0b00000001		; ??	
-000052 3001                      		cpi		r16,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.
+                                 		;andi	r16,0b00000001		; ??	
+                                 		;cpi		r16,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.
                                  
-000053 f421                      		brne	fim					;
+                                 		;brne	fim					;
                                  
                                  
-000054 e00c                      		ldi		r16,0b00001100 ;  Liga o led 3 e o 4
+                                 		;ldi		r16,0b00001000 ;  Liga o led 3 e o 4
+000051 0f00                      		lsl		r16 ;vai para a esquerda 
+000052 0f00                      		lsl		r16
+000053 0f00                      		lsl		r16
+000054 0f00                      		lsl		r16
 000055 bb05                      		out		PORTC,r16
+                                 		;mov		r17,r16	; move os r
                                  
-                                 	
+                                 		
+000056 940e 0060                 		call	inver
+000058 0f02                      		add		r16,r18
+000059 bb05                      		out		PORTC,r16
+                                 		;ror		r17	;roda para a direita
+                                 		;add		r16,r17
+                                 		
+                                 		;out		PORTC,r16
+                                 		;ldi		r18,0b01000000
+                                 		;out		PORTC,r18
+                                 		;ror		r18
+                                 		;asr		r18
+                                 		;out		PORTC,r18
                                  
-000056 940c 0050                 		jmp		ciclo
+00005a 940c 0050                 		jmp		ciclo
                                  
                                  fim:	
-000058 e000                      		ldi		r16,0b00000000 ;  apaga todos os leds
-000059 bb05                      		out		PORTC,r16
+00005c e000                      		ldi		r16,0b00000000 ;  apaga todos os leds
+00005d bb05                      		out		PORTC,r16
                                  		
-00005a 940c 0050                 		jmp		ciclo
-                                 		
+00005e 940c 0050                 		jmp		ciclo
                                  		
                                  
-                                 		
-                                 			 
+                                 
+                                 
+                                 Inver:	
+000060 e020                      		ldi		r18,0b00000000
+000061 fb00                      		bst		r16,0	;faz load do bit do r para T
+000062 f927                      		bld		r18,7	; escreve o bit de T em r18	
+                                 				
+000063 fb01                      		bst		r16,1	
+000064 f926                      		bld		r18,6
+                                 
+000065 fb02                      		bst		r16,2	
+000066 f925                      		bld		r18,5
+                                 
+000067 fb03                      		bst		r16,3	
+000068 f924                      		bld		r18,4
+                                 
+000069 fb04                      		bst		r16,4	
+00006a f923                      		bld		r18,3
+                                 
+00006b fb05                      		bst		r16,5	
+00006c f922                      		bld		r18,2
+                                 
+00006d fb06                      		bst		r16,6	
+00006e f921                      		bld		r18,1
+                                 
+00006f fb07                      		bst		r16,7	
+000070 f920                      		bld		r18,0
+                                 
 
 
 RESOURCE USE INFORMATION
@@ -1345,38 +1390,38 @@ counted separately from r26..r31 here.
 "ATmega128" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  14 r17:   0 r18:   0 r19:   0 r20:   0 
+r13:   0 r14:   0 r15:   0 r16:  25 r17:   0 r18:  10 r19:   0 r20:   0 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 1 out of 35 (2.9%)
+Registers used: 2 out of 35 (5.7%)
 
 "ATmega128" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
-andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+.lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   8 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   1 cbi   :   0 cbr   :   0 
+brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   8 call  :   2 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   1 cpse  :   0 dec   :   0 elpm  :   0 eor   :   0 fmul  :   0 
+cpi   :   0 cpse  :   0 dec   :   0 elpm  :   0 eor   :   0 fmul  :   0 
 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 
 jmp   :   3 ld    :   0 ldd   :   0 ldi   :   5 lds   :   0 lpm   :   0 
-lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
-mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   6 
-pop   :   0 push  :   0 rcall :   0 ret   :   1 reti  :   0 rjmp  :   0 
+lsl   :   4 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
+mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   7 
+pop   :   0 push  :   0 rcall :   0 ret   :   2 reti  :   0 rjmp  :   0 
 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 
 sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
 seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 
 sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 
 sts   :   0 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
-Instructions used: 9 out of 114 (7.9%)
+Instructions used: 10 out of 114 (8.8%)
 
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000b8     48      0     48  131072   0.0%
+[.cseg] 0x000000 0x0000e4     92      0     92  131072   0.1%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 

@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\DEE\Desktop\Atmel\2DD_melhorgrupo\2DD_melhorgrupo\main.asm Wed Sep 27 11:00:03 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\Atmel Studio\7.0\MICMIC-master\2DD_melhorgrupo\main.asm Sat Sep 30 12:45:16 2017
 
 
 EQU  SIGNATURE_000 0000001e
@@ -870,4 +870,5 @@ EQU  INT_VECTORS_SIZE 00000046
 CSEG main         0000004a
 CSEG inic         00000046
 CSEG ciclo        00000050
-CSEG fim          00000058
+CSEG inver        00000060
+CSEG fim          0000005c
