@@ -20,6 +20,7 @@ inic:		ldi r16,0b11111111;
 			ldi	r19,0b00000000
 			out DDRC,r16		;DDRC índica nos que é o PORTC	
 			out	PORTC,r16
+			out DDRA,r19
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 ;---------------------------Programa Principal--------------------------
@@ -43,13 +44,17 @@ ciclo:
 			jmp		ciclo
 
 seq:		
-			cpi		r19,0b00001000
+			call	delay
+			cpi		r19,0b00001000 ; mudar para testar o carry 
 			breq	clear
 			
 			out		PORTC,r16
-			call	delay
+			
 
 		
+			in		r28,PINA
+			cpi		r28,0b11011111
+			breq	ciclo
 
 			lsl		r16
 			
@@ -66,19 +71,23 @@ delay:
 			push	r21
 			push	r22
 
-			ldi		r22,172
-ciclo0:		ldi		r21,31
-ciclo1:		ldi		r20,171
+			ldi		r22,21
+ciclo0:		ldi		r21,255
+ciclo1:		ldi		r20,248
 ciclo2:		dec		r20
+			
 			brne	ciclo2
 			
+		
+
+
 			dec		r21
 			brne	ciclo1
 
+			
+
 			dec		r22
-
-
-
+	
 			brne	ciclo0
 
 			pop		r22
