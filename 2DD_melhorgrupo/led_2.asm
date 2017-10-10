@@ -31,42 +31,38 @@ main:
 			ldi		r16,0x10
 			out		sph,r16
 
+
 			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  
 			
 
-ciclo:		
-			ldi		r26,0b11111111
-			out		PORTC,r26
-			ldi		r16,0b11111110
-			in		r17,PINA			;le PORTA para r16
-			cpi		r17,0b11111110
-			breq	seq
-			jmp		ciclo
-
-seq:		
-			call	delay
-			cpi		r19,0b00001000 ; mudar para testar o carry 
-			breq	clear
-			
+cicloini:		
+			ldi		r16,0b11111111	; limpa os leds - faz reset
 			out		PORTC,r16
 			
+ciclo:
+			in		r17,PINA			;le PORTA para r16 ve se o botao foi carregado
+			cpi		r17,0b11111110
+			breq	seq
 
-		
+			jmp		ciclo ; fecha o cilco
+
+seq:		
+			call	delay					
+			out		PORTC,r16
+			
 			in		r28,PINA
 			cpi		r28,0b11011111
-			breq	ciclo
+			breq	cicloini ; verifica se se carregou no botao para parar caso sim vai pra o inicio e limpa os leds
 
 			lsl		r16
-			
-			inc		r19
+			brcc	clear	;verifica se o carry é 0 caso seja vai dar rest aos leds 		
 			jmp		seq
 
 
 clear:
-			ldi		r16,0b11111110
-			clr		r19
+			ldi		r16,0b11111111	; serve de reset para repetir a sequencia
 			jmp		seq
-delay:		
+delay:						; da um atraso 
 			push	r20
 			push	r21
 			push	r22

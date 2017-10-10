@@ -15,7 +15,7 @@
     <Name>2DD_melhorgrupo</Name>
     <RootNamespace>2DD_melhorgrupo</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\led_1.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\led_2.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -94,6 +94,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="led_1.asm">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="led_2.asm">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
