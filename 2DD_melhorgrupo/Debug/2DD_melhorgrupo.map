@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm Tue Oct 10 23:15:33 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s Thu Oct 12 16:58:47 2017
 
 
 EQU  SIGNATURE_000 0000001e
@@ -867,13 +867,32 @@ EQU  UTXC1addr    00000040
 EQU  TWIaddr      00000042
 EQU  SPMRaddr     00000044
 EQU  INT_VECTORS_SIZE 00000046
-CSEG main         0000004d
-CSEG inic         00000046
-CSEG cicloini     00000053
-CSEG ciclo        00000055
-CSEG seq          0000005a
-CSEG delay        00000067
-CSEG clear        00000064
-CSEG ciclo0       0000006b
-CSEG ciclo1       0000006c
-CSEG ciclo2       0000006d
+DEF  display      r19
+DEF  contador     r18
+EQU  zero         000000c0
+EQU  um           000000f9
+EQU  dois         000000a4
+EQU  tres         000000b0
+EQU  quatro       00000099
+EQU  cinco        00000092
+EQU  seis         00000082
+EQU  sete         000000f8
+EQU  oito         00000080
+EQU  nove         00000090
+CSEG main         00000058
+CSEG table        00000046
+CSEG inic         0000004b
+CSEG numerosv2    00000086
+CSEG cicloini     00000060
+CSEG cicloini2    00000064
+CSEG delaym       0000008c
+CSEG ciclo        0000006a
+CSEG entra        00000072
+CSEG sai          0000007c
+CSEG ciclo0       00000090
+CSEG ciclo1       00000091
+CSEG ciclo2       00000092
+CSEG delaymax     0000009c
+CSEG ciclo20      000000a0
+CSEG ciclo21      000000a1
+CSEG ciclo22      000000a2

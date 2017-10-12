@@ -7,7 +7,7 @@
   <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc</FILE>
  </INCLUDED_FILES>
@@ -22,15 +22,22 @@
   <FILE>2DD_melhorgrupo.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <main><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>27</LINE></main>
-  <inic><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>18</LINE></inic>
-  <cicloini><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>38</LINE></cicloini>
-  <ciclo><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>42</LINE></ciclo>
-  <seq><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>49</LINE></seq>
-  <delay><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>65</LINE></delay>
-  <clear><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>62</LINE></clear>
-  <ciclo0><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>71</LINE></ciclo0>
-  <ciclo1><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>72</LINE></ciclo1>
-  <ciclo2><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_2.asm</FILE><LINE>73</LINE></ciclo2>
+  <main><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>55</LINE></main>
+  <table><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>32</LINE></table>
+  <inic><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>35</LINE></inic>
+  <numerosv2><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>113</LINE></numerosv2>
+  <cicloini><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>71</LINE></cicloini>
+  <cicloini2><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>74</LINE></cicloini2>
+  <delaym><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>123</LINE></delaym>
+  <ciclo><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>78</LINE></ciclo>
+  <entra><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>91</LINE></entra>
+  <sai><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>102</LINE></sai>
+  <ciclo0><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>129</LINE></ciclo0>
+  <ciclo1><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>130</LINE></ciclo1>
+  <ciclo2><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>131</LINE></ciclo2>
+  <delaymax><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>153</LINE></delaymax>
+  <ciclo20><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>159</LINE></ciclo20>
+  <ciclo21><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>160</LINE></ciclo21>
+  <ciclo22><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s</FILE><LINE>161</LINE></ciclo22>
  </LABELS>
 </ASSEMBLER_INFO>

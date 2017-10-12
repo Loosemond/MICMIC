@@ -29,8 +29,14 @@
 		jmp main ;começa o programa na func main 
 .cseg
 .org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
+table:
+.db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove
 ;------------------------------Inicialização----------------------------
-inic:		ldi r16,0b11000000;			
+inic:		
+			ldi	zl,low(table*2)
+			ldi zh,high(table*2)
+			ldi	r22,0b00000000
+			ldi r16,0b11000000;			
 			ldi	r17,0b11111111
 			
 			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
@@ -38,7 +44,8 @@ inic:		ldi r16,0b11000000;
 			out DDRA,r17
 			out	PORTC,r17  ;desliga os leds do display
 			out	PORTD,r16
-			out PORTA,r17
+			out PORTA,r22
+			
 				
 			ldi	contador,0b00001001	;nove
 			
@@ -59,7 +66,7 @@ main:
 			
 					
 
-			jmp		numeros
+			jmp		numerosv2
 
 cicloini:	sbrc	r16,0
 			sbrc	r16,1
@@ -68,13 +75,14 @@ cicloini2:	call    delaym
 			sbrc	r16,0
 			sbrc	r16,1
 			jmp		ciclo
+ciclo2
 ciclo:		
 
-			in		r16,PIND
-			sbrs	r16,0
+			;in		r16,PIND
+			sbis	PIND,1
 			jmp		entra																	; se for igual vai para seq
 			
-			sbrs	r16,1
+			sbis	PIND,2
 			jmp		sai						
 
 			jmp		ciclo 
@@ -85,88 +93,32 @@ entra:		cpi		contador,0b00000000
 			breq	ciclo				;se for igual salta
 			
 			;call		delaym				;vai esperar 1ms e verifiacr outravez se o butao foi carregado
-			in		r16,PINA
-			sbrs	r16,0
+			sbic	PIND,1
 			jmp		ciclo
 					
 			dec		contador
-			jmp		numeros			
+			jmp		numerosv2			
 			jmp		cicloini
 					
 sai:		cpi		contador,0b00001001
 			breq	ciclo				;se for igual salta
 			
 			;call		delaym				;vai esperar 1ms e verifiacr outravez se o butao foi carregado
-			in		r16,PINA
-			sbrs	r16,1
-			jmp	ciclo
+			sbic		PIND,2
+			jmp		ciclo
 
 			inc		contador
-			jmp		numeros			
+			jmp		numerosv2			
 			jmp		cicloini					
 
-numeros:	
-			cpi		contador,0
-			breq	numero0	
-			cpi		contador,1
-			breq	numero1
-			cpi		contador,2
-			breq	numero2	
-			cpi		contador,3
-			breq	numero3	
-			cpi		contador,4
-			breq	numero4	
-			cpi		contador,5
-			breq	numero5	
-			cpi		contador,6
-			breq	numero6	
-			cpi		contador,7
-			breq	numero7	
-			cpi		contador,8
-			breq	numero8	
-			cpi		contador,9
-			breq	numero9	
-
-numero0:	ldi		display,zero
-			out		PORTC,display
+numerosv2:	
+						
+			add		zl,contador		;soma o numero que se vai querer colocar no display 			
+			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
+			out		PORTC,display	;
+			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
 			jmp		ciclo	
 
-numero1:	ldi		display,um
-			out		PORTC,display
-			jmp		ciclo	
-
-numero2:	ldi		display,dois
-			out		PORTC,display
-			jmp		ciclo	
-
-numero3:	ldi		display,tres
-			out		PORTC,display
-			jmp		ciclo	
-
-numero4:	ldi		display,quatro
-			out		PORTC,display
-			jmp		ciclo	
-
-numero5:	ldi		display,cinco
-			out		PORTC,display
-			jmp		ciclo	
-
-numero6:	ldi		display,seis
-			out		PORTC,display
-			jmp		ciclo	
-
-numero7:	ldi		display,sete
-			out		PORTC,display
-			jmp		ciclo	
-
-numero8:	ldi		display,oito
-			out		PORTC,display
-			jmp		ciclo	
-
-numero9:	ldi		display,nove
-			out		PORTC,display
-			jmp		ciclo	
-				
 
 
 delaym:						; da um atraso 
