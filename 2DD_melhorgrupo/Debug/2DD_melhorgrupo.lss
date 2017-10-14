@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s Thu Oct 12 16:58:47 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s Sat Oct 14 17:04:44 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
@@ -1295,7 +1295,7 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s(10): Including fil
                                  
                                  .cseg ; reset de vector
                                  .org 0x0 ;defina a o sitio na memoria
-000000 940c 0058                 		jmp main ;começa o programa na func main 
+000000 940c 005a                 		jmp main ;começa o programa na func main 
                                  .cseg
                                  .org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
                                  table:
@@ -1311,146 +1311,127 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s(10): Including fil
 00004d e060                      			ldi	r22,0b00000000
 00004e ec00                      			ldi r16,0b11000000;			
 00004f ef1f                      			ldi	r17,0b11111111
-                                 			
-000050 bb01                      			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
-000051 bb14                      			out	DDRC,r17		
-000052 bb1a                      			out DDRA,r17
-000053 bb15                      			out	PORTC,r17  ;desliga os leds do display
-000054 bb02                      			out	PORTD,r16
-000055 bb6b                      			out PORTA,r22
+000050 e3cf                      			ldi	r28,0b00111111
+000051 ebdf                      			ldi	r29,0b10111111
+000052 bb01                      			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
+000053 bb14                      			out	DDRC,r17		
+000054 bb1a                      			out DDRA,r17
+000055 bb15                      			out	PORTC,r17  ;desliga os leds do display
+000056 bb02                      			out	PORTD,r16
+000057 bbcb                      			out PORTA,r28
                                  			
                                  				
-000056 e029                      			ldi	contador,0b00001001	;nove
+000058 e029                      			ldi	contador,0b00001001	;nove
                                  			
-000057 9508                      			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
+000059 9508                      			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
                                  
                                  ;---------------------------Programa Principal--------------------------
                                  main:
-                                 		
-000058 ef0f                      			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
-000059 bf0d                      			out		spl,r16
-00005a e100                      			ldi		r16,0x10
-00005b bf0e                      			out		sph,r16
-                                 
-                                 
-00005c 940e 004b                 			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  
-                                 
-                                 
                                  			
-                                 					
+00005a ef0f                      			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+00005b bf0d                      			out		spl,r16
+00005c e100                      			ldi		r16,0x10
+00005d bf0e                      			out		sph,r16
+00005e 940e 004b                 			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
+000060 940c 0087                 			jmp		numerosv2
                                  
-00005e 940c 0086                 			jmp		numerosv2
-                                 
-000060 fd00                      cicloini:	sbrc	r16,0
-000061 fd01                      			sbrc	r16,1
-000062 940c 0064                 			jmp		cicloini2
-000064 940e 008c                 cicloini2:	call    delaym	
-000066 fd00                      			sbrc	r16,0
-000067 fd01                      			sbrc	r16,1
-000068 940c 006a                 			jmp		ciclo
+                                 cicloini0:	
+000062 940e 008d                 			call	delaym	
+000064 1326                      			cpse	contador,r22
+000065 940c 0068                 			jmp		ciclo	
+000067 bbdb                      			out		PORTA,r29
+                                 			
                                  ciclo:		
+000068 9981                      			sbic	PIND,1
+000069 940c 0070                 			jmp		entra																	; se for igual vai para seq
+                                 			
+00006b 9982                      			sbic	PIND,2
+00006c 940c 007c                 			jmp		sai						
                                  
-                                 			;in		r16,PIND
-00006a 9b81                      			sbis	PIND,1
-00006b 940c 0072                 			jmp		entra																	; se for igual vai para seq
+00006e 940c 0068                 			jmp		ciclo 
                                  			
-00006d 9b82                      			sbis	PIND,2
-00006e 940c 007c                 			jmp		sai						
-                                 
-000070 940c 006a                 			jmp		ciclo 
-                                 			
-                                 
-                                 			
-000072 3020                      entra:		cpi		contador,0b00000000
-000073 f3b1                      			breq	ciclo				;se for igual salta
-                                 			
-                                 			;call		delaym				;vai esperar 1ms e verifiacr outravez se o butao foi carregado
+                                 entra:		
+                                 			;bset	1
+000070 3020                      			cpi		contador,0b00000000 ; se nao houver carros 
+000071 f3b1                      			breq	ciclo			;se for igual salta
+000072 940e 008d                 			call		delaym				;vai esperar 1ms e verifiacr outravez se o butao foi carregado
 000074 9981                      			sbic	PIND,1
-000075 940c 006a                 			jmp		ciclo
+000075 940c 0068                 			jmp		ciclo
                                  					
 000077 952a                      			dec		contador
-000078 940c 0086                 			jmp		numerosv2			
-00007a 940c 0060                 			jmp		cicloini
+000078 940c 0087                 			jmp		numerosv2			
+00007a 940c 0062                 			jmp		cicloini0
                                  					
-00007c 3029                      sai:		cpi		contador,0b00001001
-00007d f361                      			breq	ciclo				;se for igual salta
-                                 			
+                                 sai:		
+00007c 3029                      			cpi		contador,0b00001001
+00007d f351                      			breq	ciclo				;se for igual salta			
                                  			;call		delaym				;vai esperar 1ms e verifiacr outravez se o butao foi carregado
 00007e 9982                      			sbic		PIND,2
-00007f 940c 006a                 			jmp		ciclo
+00007f 940c 0068                 			jmp		ciclo
                                  
 000081 9523                      			inc		contador
-000082 940c 0086                 			jmp		numerosv2			
-000084 940c 0060                 			jmp		cicloini					
+000082 bbcb                      			out		PORTA,r28	
+000083 940c 0087                 			jmp		numerosv2
+                                 					
+000085 940c 0062                 			jmp		cicloini0					
                                  
                                  numerosv2:	
                                  						
-000086 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
-000087 9134                      			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
-000088 bb35                      			out		PORTC,display	;
-000089 e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
-00008a 940c 006a                 			jmp		ciclo	
+000087 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
+000088 9134                      			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
+000089 bb35                      			out		PORTC,display	;
+00008a e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+00008b 940c 0062                 			jmp		cicloini0	
                                  
                                  
                                  
                                  delaym:						; da um atraso 
-00008c 934f                      			push	r20
-00008d 935f                      			push	r21
-00008e 936f                      			push	r22
+00008d 934f                      			push	r20
+00008e 935f                      			push	r21
+00008f 936f                      			push	r22
                                  
-00008f ef60                      			ldi		r22,240		;z 14
-000090 eb5e                      ciclo0:		ldi		r21,190		;y
-000091 eb4e                      ciclo1:		ldi		r20,190		;x
-000092 954a                      ciclo2:		dec		r20
-                                 			
-000093 f7f1                      			brne	ciclo2
-                                 			
-                                 		
-                                 
-                                 
-000094 955a                      			dec		r21
-000095 f7d9                      			brne	ciclo1
-                                 
-                                 			
-                                 
-000096 956a                      			dec		r22
-                                 	
-000097 f7c1                      			brne	ciclo0
-                                 
-000098 916f                      			pop		r22
-000099 915f                      			pop		r21
-00009a 914f                      			pop		r20
-00009b 9508                      			ret	
-                                 
+000090 e060                      			ldi		r22,0		;z 14
+000091 e05e                      ciclo0:		ldi		r21,14		;y
+000092 e144                      ciclo1:		ldi		r20,20	;x
+000093 954a                      ciclo2:		dec		r20
+000094 f7f1                      			brne	ciclo2
+000095 955a                      			dec		r21
+000096 f7d9                      			brne	ciclo1
+000097 956a                      			dec		r22
+000098 f7c1                      			brne	ciclo0
+000099 916f                      			pop		r22
+00009a 915f                      			pop		r21
+00009b 914f                      			pop		r20
+00009c 9508                      			ret	
                                  
                                  delaymax:						; da um atraso 
-00009c 934f                      			push	r20
-00009d 935f                      			push	r21
-00009e 936f                      			push	r22
+00009d 934f                      			push	r20
+00009e 935f                      			push	r21
+00009f 936f                      			push	r22
                                  
-00009f e165                      			ldi		r22,21
-0000a0 ef5f                      ciclo20:		ldi		r21,255
-0000a1 ef48                      ciclo21:		ldi		r20,248
-0000a2 954a                      ciclo22:		dec		r20
+0000a0 e86c                      			ldi		r22,140
+0000a1 ef5f                      ciclo20:	ldi		r21,255
+0000a2 ef48                      ciclo21:	ldi		r20,248
+0000a3 954a                      ciclo22:	dec		r20
                                  			
-0000a3 f771                      			brne	ciclo2
+0000a4 f771                      			brne	ciclo2
                                  			
                                  		
                                  
                                  
-0000a4 955a                      			dec		r21
-0000a5 f759                      			brne	ciclo1
+0000a5 955a                      			dec		r21
+0000a6 f759                      			brne	ciclo1
                                  
                                  			
                                  
-0000a6 956a                      			dec		r22
+0000a7 956a                      			dec		r22
                                  	
-0000a7 f741                      			brne	ciclo0
+0000a8 f741                      			brne	ciclo0
                                  
-0000a8 916f                      			pop		r22
-0000a9 915f                      			pop		r21
-0000aa 914f                      			pop		r20
-0000ab 9508                      			ret	
+0000a9 916f                      			pop		r22
+0000aa 915f                      			pop		r21
+0000ab 914f                      			pop		r20
+0000ac 9508                      			ret	
                                  
                                  
 
@@ -1472,10 +1453,10 @@ counted separately from r26..r31 here.
 "ATmega128" register use summary:
 x  :   0 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  11 r17:   4 r18:   6 r19:   2 r20:   8 
-r21:   8 r22:  10 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
-r29:   0 r30:   3 r31:   1 
-Registers used: 10 out of 35 (28.6%)
+r13:   0 r14:   0 r15:   0 r16:   7 r17:   4 r18:   7 r19:   2 r20:   8 
+r21:   8 r22:  10 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   3 
+r29:   2 r30:   3 r31:   1 
+Registers used: 12 out of 35 (34.3%)
 
 "ATmega128" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
@@ -1483,27 +1464,27 @@ andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0
 brcc  :   0 brcs  :   0 break :   0 breq  :   2 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   6 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   2 cbi   :   0 cbr   :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   3 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   2 cpse  :   0 dec   :   7 elpm  :   0 eor   :   0 fmul  :   0 
+cpi   :   2 cpse  :   1 dec   :   7 elpm  :   0 eor   :   0 fmul  :   0 
 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   1 
-jmp   :  14 ld    :   0 ldd   :   0 ldi   :  15 lds   :   0 lpm   :   2 
+jmp   :  13 ld    :   0 ldd   :   0 ldi   :  17 lds   :   0 lpm   :   2 
 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
-mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   9 
+mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  11 
 pop   :   6 push  :   6 rcall :   0 ret   :   3 reti  :   0 rjmp  :   0 
-rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   2 
-sbis  :   2 sbiw  :   0 sbr   :   0 sbrc  :   4 sbrs  :   0 sec   :   0 
+rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   4 
+sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
 seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 
 sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 
 sts   :   0 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
-Instructions used: 17 out of 114 (14.9%)
+Instructions used: 16 out of 114 (14.0%)
 
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000158    198     10    208  131072   0.2%
+[.cseg] 0x000000 0x00015a    200     10    210  131072   0.2%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
