@@ -69,59 +69,33 @@ table:
 inic:		
 
 			ldi	zl,low(table*2)
-
 			ldi zh,high(table*2)
-
 			ldi	r22,0b00000000
-
 			ldi r16,0b11000000;			
-
 			ldi	r17,0b11111111
-
 			ldi	r28,0b10111111
-
 			ldi	r29,0b01111111
-
 			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
-
 			out	DDRC,r17		
-
 			out DDRA,r17
-
 			out	PORTC,r17  ;desliga os leds do display
-
 			out	PORTD,r16
-
 			out PORTA,r28
 
-			
-
-				
-
 			ldi	contador,0b00001001	;nove
-
-			
-
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 
 
 ;---------------------------Programa Principal--------------------------
 
-main:
-
-			
+main:		
 
 			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
-
 			out		spl,r16
-
 			ldi		r16,0x10
-
 			out		sph,r16
-
 			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
-
 			jmp		numerosv2
 
 
@@ -129,26 +103,19 @@ main:
 cicloini0:	
 
 			call	delaym	
-
 			cpse	contador,r22
-
 			jmp		ciclo	
-
 			out		PORTA,r29
 			
 kapa:		
-call	delaymax
-out		PORTC,r17
-
-			
-			
+			call	delaymax
+			out		PORTC,r17
+						
 			sbis	PIND,1
 			jmp		sai
 			call	delaymax
 			call	numerosv2
 			
-		
-
 			sbis	PIND,1
 			jmp		sai
 			jmp		kapa
@@ -157,17 +124,10 @@ out		PORTC,r17
 ciclo:		
 
 			sbis	PIND,0
-
-			jmp		entra																	; se for igual vai para seq
-
-			
+			jmp		entra																	; se for igual vai para seq		
 
 			sbis	PIND,1
-
 			jmp		sai						
-
-
-
 			jmp		ciclo 
 
 			
@@ -175,23 +135,15 @@ ciclo:
 entra:		
 
 			;bset	1
-
 			cpi		contador,0b00000000 ; se nao houver carros 
-
 			breq	ciclo			;se for igual salta
-
 			call	delaym				;vai esperar 1ms e verifiacr outravez se o butao foi carregado
 
 			sbis	PIND,0
-
-			jmp		entra
-
-					
+			jmp		entra					
 
 			dec		contador
-
 			jmp		numerosv2			
-
 			jmp		cicloini0
 
 					
@@ -199,25 +151,14 @@ entra:
 sai:		
 
 			cpi		contador,0b00001001
-
 			breq	ciclo				;se for igual salta			
-
 			call		delaym				;vai esperar 1ms e verifiacr outravez se o butao foi carregado
-
 			sbis		PIND,1
-
 			jmp		sai
 
-
-
 			inc		contador
-
 			out		PORTA,r28	
-
-			jmp		numerosv2
-
-					
-
+			jmp		numerosv2					
 			jmp		cicloini0					
 
 
@@ -227,13 +168,9 @@ numerosv2:
 						
 			
 			add		zl,contador		;soma o numero que se vai querer colocar no display 			
-
 			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
-
 			out		PORTC,display	;
-
 			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
-
 			jmp		cicloini0	
 
 
@@ -252,11 +189,11 @@ delaym:						; da um atraso
 
 
 
-			ldi		r22,0		;z 14
+			ldi		r22,0		;z 14 0
 
-cciclo0:		ldi		r21,14		;y
+cciclo0:		ldi		r21,4		;y 14
 
-cciclo1:		ldi		r20,20	;x
+cciclo1:		ldi		r20,2	;x 20
 
 cciclo2:		dec		r20
 
@@ -291,9 +228,9 @@ delaymax:						; da um atraso
 
 			ldi		r22,0		;z 0
 
-ciclo0:		ldi		r21,200		;y 200
+ciclo0:		ldi		r21,20		;y 200
 
-ciclo1:		ldi		r20,100		;x	100
+ciclo1:		ldi		r20,10		;x	100
 
 ciclo2:		dec		r20
 
