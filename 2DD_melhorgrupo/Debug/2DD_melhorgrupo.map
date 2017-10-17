@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s Sat Oct 14 17:04:44 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_3.s Tue Oct 17 18:23:37 2017
 
 
 EQU  SIGNATURE_000 0000001e
@@ -882,16 +882,17 @@ EQU  nove         00000090
 CSEG main         0000005a
 CSEG table        00000046
 CSEG inic         0000004b
-CSEG numerosv2    00000087
+CSEG numerosv2    00000098
 CSEG cicloini0    00000062
-CSEG delaym       0000008d
-CSEG ciclo        00000068
-CSEG entra        00000070
-CSEG sai          0000007c
-CSEG ciclo0       00000091
-CSEG ciclo1       00000092
-CSEG ciclo2       00000093
-CSEG delaymax     0000009d
-CSEG ciclo20      000000a1
-CSEG ciclo21      000000a2
-CSEG ciclo22      000000a3
+CSEG delaym       0000009e
+CSEG ciclo        00000077
+CSEG kapa         00000068
+CSEG delaymax     000000ae
+CSEG sai          0000008b
+CSEG entra        0000007f
+CSEG cciclo0      000000a2
+CSEG cciclo1      000000a3
+CSEG cciclo2      000000a4
+CSEG ciclo0       000000b2
+CSEG ciclo1       000000b3
+CSEG ciclo2       000000b4

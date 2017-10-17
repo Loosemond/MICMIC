@@ -93,6 +93,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="doacao1.asm">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="led_1.asm">
       <SubType>Code</SubType>
     </Compile>
