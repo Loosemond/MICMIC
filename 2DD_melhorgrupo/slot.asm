@@ -113,7 +113,8 @@ main:
 			call	inic					; É como se fosse uma funçao vai para a primeira linha do inic  						
 			
 
-clini:		ldi		contador,9
+clini:		jmp		fim
+			ldi		contador,9
 			cpi		meme,0					;verifica se ja se escolheu todos os numeros
 			breq	FIM
 
@@ -124,12 +125,12 @@ ciclo:
 			sbis	PIND,0					;verifi o botao
 			jmp		STOP
 salto:		sbic	PIND,0					;verifica se larguei o butao
-			clt						;limpa a flag
+			clt								;limpa a flag
 
 			cpi		contador,0				;verificar se o contador chega a 0
 			breq	clear
 					
-spot1:		st		x+,contador
+spot1:		st		x+,contador				;como meme = 4  quando sumar 4 vezes xl vai ficar 04 pois xl começa em 00
 			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
 			breq	clear2	
 			jmp		spot1	
@@ -145,27 +146,42 @@ clear:
 clear2:		ldi		xl,0					;da reset ao ponteiro da ram
 			jmp		clo1
 
-STOP:		dec		meme
-			set
+STOP:		dec		meme					;decrementa meme para poder selecionar um numero
+			set								;ativa a t falg
 			jmp		clini
 			
 
-FIM:					
+FIM:		push	r16
+			push	r17
+			push	meme
+			ldi		xl,0
+			ldi		meme,4
+			LD		r16,X+
+check:		dec		meme
+			cpi		meme,0
+			breq	WIN
+			LD		r17,X+
+			cp		r16,r17
+			breq	check
+
+			pop		meme
+			pop		r17
+			pop		r16
 
 			ldi		meme,4
 			sbis	PIND,1
 			jmp		clini
 			jmp		fim
 
+
+
+
 numerosv3:		; vai mostrar os numeros por ordem
 			push	r16	
 			push	contador
 			ldi		r16,0b00010000
-			clc		;limpa o carry
-
-			
-nloop:		
-			brcs	ndone
+			clc		;limpa o carry		
+nloop:		brcs	ndone
 			out		PORTD,r16
 			LD		contador,X+
 
@@ -184,24 +200,14 @@ ndone:		ldi		xl,0
 			ret	
 
 
-delaym:						; da um atraso 
 
-			push	r18
-
-			push	r21
-
-			push	r22
-
-
-    ldi  r18, 20
-L1: dec  r18
-    brne L1
-    nop
-
-			pop		r22
-
-			pop		r21
-
-			pop		r18
-
-			ret	
+win:		push	r20
+			ldi		r21,0b00000000
+			ldi		meme,4
+			ldi		xl,0		
+spot2:		st		x+,r21
+			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
+			brne	spot2
+loopy:		nop		
+			;call	numerosv3
+			jmp		loopy

@@ -26,18 +26,20 @@
   <table><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>66</LINE></table>
   <inic><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>72</LINE></inic>
   <clini><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>116</LINE></clini>
-  <FIM><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>153</LINE></FIM>
-  <ciclo><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>120</LINE></ciclo>
-  <salto><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>126</LINE></salto>
-  <STOP><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>148</LINE></STOP>
-  <clear><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>141</LINE></clear>
-  <spot1><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>132</LINE></spot1>
-  <clear2><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>145</LINE></clear2>
-  <clo1><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>139</LINE></clo1>
-  <numerosv3><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>160</LINE></numerosv3>
-  <nloop><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>167</LINE></nloop>
-  <ndone><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>181</LINE></ndone>
-  <delaym><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>187</LINE></delaym>
-  <L1><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>197</LINE></L1>
+  <fim><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>154</LINE></fim>
+  <ciclo><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>121</LINE></ciclo>
+  <salto><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>127</LINE></salto>
+  <STOP><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>149</LINE></STOP>
+  <clear><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>142</LINE></clear>
+  <spot1><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>133</LINE></spot1>
+  <clear2><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>146</LINE></clear2>
+  <clo1><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>140</LINE></clo1>
+  <check><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>160</LINE></check>
+  <WIN><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>204</LINE></WIN>
+  <numerosv3><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>179</LINE></numerosv3>
+  <nloop><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>184</LINE></nloop>
+  <ndone><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>197</LINE></ndone>
+  <spot2><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>208</LINE></spot2>
+  <loopy><FILE>C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm</FILE><LINE>211</LINE></loopy>
  </LABELS>
 </ASSEMBLER_INFO>

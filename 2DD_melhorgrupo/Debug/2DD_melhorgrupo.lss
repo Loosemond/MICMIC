@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm Wed Oct 18 19:10:42 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm Wed Oct 18 20:08:41 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
@@ -1386,97 +1386,103 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including fi
 000069 940e 004b                 			call	inic					; É como se fosse uma funçao vai para a primeira linha do inic  						
                                  			
                                  
-00006b e029                      clini:		ldi		contador,9
-00006c 3040                      			cpi		meme,0					;verifica se ja se escolheu todos os numeros
-00006d f0d1                      			breq	FIM
+00006b 940c 008a                 clini:		jmp		fim
+00006d e029                      			ldi		contador,9
+00006e 3040                      			cpi		meme,0					;verifica se ja se escolheu todos os numeros
+00006f f0d1                      			breq	FIM
                                  
                                  ciclo:
                                  			;call	numerosv3
                                  
-00006e f01e                      			brts	salto					;se a falg tiver limpa
-00006f 9b80                      			sbis	PIND,0					;verifi o botao
-000070 940c 0084                 			jmp		STOP
-000072 9980                      salto:		sbic	PIND,0					;verifica se larguei o butao
-000073 94e8                      			clt						;limpa a flag
+000070 f01e                      			brts	salto					;se a falg tiver limpa
+000071 9b80                      			sbis	PIND,0					;verifi o botao
+000072 940c 0086                 			jmp		STOP
+000074 9980                      salto:		sbic	PIND,0					;verifica se larguei o butao
+000075 94e8                      			clt								;limpa a flag
                                  
-000074 3020                      			cpi		contador,0				;verificar se o contador chega a 0
-000075 f041                      			breq	clear
+000076 3020                      			cpi		contador,0				;verificar se o contador chega a 0
+000077 f041                      			breq	clear
                                  					
-000076 932d                      spot1:		st		x+,contador
-000077 17a4                      			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
-000078 f041                      			breq	clear2	
-000079 940c 0076                 			jmp		spot1	
+000078 932d                      spot1:		st		x+,contador				;como meme = 4  quando sumar 4 vezes xl vai ficar 04 pois xl começa em 00
+000079 17a4                      			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
+00007a f041                      			breq	clear2	
+00007b 940c 0078                 			jmp		spot1	
                                  
                                  
                                  																			
-00007b 952a                      clo1:		dec		contador				;decresce
-00007c 940c 006e                 			jmp		ciclo
+00007d 952a                      clo1:		dec		contador				;decresce
+00007e 940c 0070                 			jmp		ciclo
                                  clear:
-00007e e02a                      			ldi		contador,10				;da reset ao contador
-00007f 940c 007b                 			jmp		clo1
+000080 e02a                      			ldi		contador,10				;da reset ao contador
+000081 940c 007d                 			jmp		clo1
                                  
-000081 e0a0                      clear2:		ldi		xl,0					;da reset ao ponteiro da ram
-000082 940c 007b                 			jmp		clo1
+000083 e0a0                      clear2:		ldi		xl,0					;da reset ao ponteiro da ram
+000084 940c 007d                 			jmp		clo1
                                  
-000084 954a                      STOP:		dec		meme
-000085 9468                      			set
-000086 940c 006b                 			jmp		clini
+000086 954a                      STOP:		dec		meme					;decrementa meme para poder selecionar um numero
+000087 9468                      			set								;ativa a t falg
+000088 940c 006b                 			jmp		clini
                                  			
                                  
-                                 FIM:					
+00008a 930f                      FIM:		push	r16
+00008b 931f                      			push	r17
+00008c 934f                      			push	meme
+00008d e0a0                      			ldi		xl,0
+00008e e044                      			ldi		meme,4
+00008f 910d                      			LD		r16,X+
+000090 954a                      check:		dec		meme
+000091 3040                      			cpi		meme,0
+000092 f0f1                      			breq	WIN
+000093 911d                      			LD		r17,X+
+000094 1701                      			cp		r16,r17
+000095 f3d1                      			breq	check
                                  
-000088 e044                      			ldi		meme,4
-000089 9b81                      			sbis	PIND,1
-00008a 940c 006b                 			jmp		clini
-00008c 940c 0088                 			jmp		fim
+000096 914f                      			pop		meme
+000097 911f                      			pop		r17
+000098 910f                      			pop		r16
+                                 
+000099 e044                      			ldi		meme,4
+00009a 9b81                      			sbis	PIND,1
+00009b 940c 006b                 			jmp		clini
+00009d 940c 008a                 			jmp		fim
+                                 
+                                 
+                                 
                                  
                                  numerosv3:		; vai mostrar os numeros por ordem
-00008e 930f                      			push	r16	
-00008f 932f                      			push	contador
-000090 e100                      			ldi		r16,0b00010000
-000091 9488                      			clc		;limpa o carry
+00009f 930f                      			push	r16	
+0000a0 932f                      			push	contador
+0000a1 e100                      			ldi		r16,0b00010000
+0000a2 9488                      			clc		;limpa o carry		
+0000a3 f048                      nloop:		brcs	ndone
+0000a4 bb02                      			out		PORTD,r16
+0000a5 912d                      			LD		contador,X+
                                  
-                                 			
-                                 nloop:		
-000092 f048                      			brcs	ndone
-000093 bb02                      			out		PORTD,r16
-000094 912d                      			LD		contador,X+
-                                 
-000095 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
-000096 9124                      			lpm		contador,z		;vai ao local da memoria e carrega o o valor que la estiver
-000097 bb25                      			out		PORTC,contador
+0000a6 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
+0000a7 9124                      			lpm		contador,z		;vai ao local da memoria e carrega o o valor que la estiver
+0000a8 bb25                      			out		PORTC,contador
                                  			;call	delaym	;
-000098 e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+0000a9 e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
                                  
-000099 0f00                      			lsl		r16
-00009a 940c 0092                 			jmp		nloop
+0000aa 0f00                      			lsl		r16
+0000ab 940c 00a3                 			jmp		nloop
                                  
-00009c e0a0                      ndone:		ldi		xl,0
-00009d 912f                      			pop		contador
-00009e 910f                      			pop		r16
-00009f 9508                      			ret	
-                                 
-                                 
-                                 delaym:						; da um atraso 
-                                 
-0000a0 932f                      			push	r18
-                                 
-0000a1 935f                      			push	r21
-                                 
-0000a2 936f                      			push	r22
+0000ad e0a0                      ndone:		ldi		xl,0
+0000ae 912f                      			pop		contador
+0000af 910f                      			pop		r16
+0000b0 9508                      			ret	
                                  
                                  
-0000a3 e124                          ldi  r18, 20
-0000a4 952a                      L1: dec  r18
-0000a5 f7f1                          brne L1
-0000a6 0000                          nop
                                  
-0000a7 916f                      			pop		r22
-                                 
-0000a8 915f                      			pop		r21
-                                 
-0000a9 912f                      			pop		r18
-                                 
+0000b1 934f                      win:		push	r20
+0000b2 e050                      			ldi		r21,0b00000000
+0000b3 e044                      			ldi		meme,4
+0000b4 e0a0                      			ldi		xl,0		
+0000b5 935d                      spot2:		st		x+,r21
+0000b6 17a4                      			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
+0000b7 f7e9                      			brne	spot2
+0000b8 0000                      loopy:		nop		
+                                 			;call	numerosv3
 
 
 RESOURCE USE INFORMATION
@@ -1494,32 +1500,32 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega128" register use summary:
-x  :   6 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   9 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  12 r17:   4 r18:  16 r19:   0 r20:   5 
-r21:   2 r22:   3 r23:   0 r24:   0 r25:   0 r26:   5 r27:   1 r28:   3 
+r13:   0 r14:   0 r15:   0 r16:  16 r17:   8 r18:  12 r19:   0 r20:  13 
+r21:   2 r22:   1 r23:   0 r24:   0 r25:   0 r26:   8 r27:   1 r28:   3 
 r29:   7 r30:   3 r31:   1 
 Registers used: 14 out of 35 (40.0%)
 
 "ATmega128" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   1 break :   0 breq  :   3 brge  :   0 brhc  :   0 
+brcc  :   0 brcs  :   1 break :   0 breq  :   5 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   1 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   1 cbi   :   0 cbr   :   0 
 clc   :   1 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
-clt   :   1 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
-cpi   :   2 cpse  :   0 dec   :   3 elpm  :   0 eor   :   0 fmul  :   0 
+clt   :   1 clv   :   0 clz   :   0 com   :   0 cp    :   3 cpc   :   0 
+cpi   :   3 cpse  :   0 dec   :   3 elpm  :   0 eor   :   0 fmul  :   0 
 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 
-jmp   :  10 ld    :   1 ldd   :   0 ldi   :  25 lds   :   0 lpm   :   2 
+jmp   :  12 ld    :   3 ldd   :   0 ldi   :  29 lds   :   0 lpm   :   2 
 lsl   :   1 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
 mulsu :   0 neg   :   0 nop   :   1 or    :   0 ori   :   0 out   :  10 
-pop   :   5 push  :   5 rcall :   0 ret   :   3 reti  :   0 rjmp  :   0 
+pop   :   5 push  :   6 rcall :   0 ret   :   2 reti  :   0 rjmp  :   0 
 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   1 
 sbis  :   2 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
 seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   1 
-sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   5 std   :   0 
+sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   6 std   :   0 
 sts   :   0 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
 Instructions used: 25 out of 114 (21.9%)
@@ -1527,7 +1533,7 @@ Instructions used: 25 out of 114 (21.9%)
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000156    196     10    206  131072   0.2%
+[.cseg] 0x000000 0x000176    228     10    238  131072   0.2%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
