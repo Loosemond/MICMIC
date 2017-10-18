@@ -71,7 +71,7 @@ inic:
 			ldi	zl,low(table*2)
 			ldi zh,high(table*2)
 			ldi	r22,0b00000000
-			ldi r16,0b11000000;			
+			ldi r16,0b11000000;	0 quer dizer input e 1 out		
 			ldi	r17,0b11111111
 			ldi	r28,0b10111111
 			ldi	r29,0b01111111
@@ -79,7 +79,7 @@ inic:
 			out	DDRC,r17		
 			out DDRA,r17
 			out	PORTC,r17  ;desliga os leds do display
-			out	PORTD,r16
+			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
 			out PORTA,r28
 
 			ldi	contador,0b00001001	;nove
