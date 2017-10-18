@@ -113,13 +113,13 @@ main:
 			call	inic					; É como se fosse uma funçao vai para a primeira linha do inic  						
 			
 
-clini:		jmp		fim
+clini:		;jmp		fim					;linha so de teste
 			ldi		contador,9
 			cpi		meme,0					;verifica se ja se escolheu todos os numeros
 			breq	FIM
 
 ciclo:
-			;call	numerosv3
+			call	numerosv3
 
 			brts	salto					;se a falg tiver limpa
 			sbis	PIND,0					;verifi o botao
@@ -169,9 +169,10 @@ check:		dec		meme
 			pop		r16
 
 			ldi		meme,4
-			sbis	PIND,1
+loopF:		sbis	PIND,1
 			jmp		clini
-			jmp		fim
+			call	numerosv3		; falta escrever algo para o ecra de preferencia dora do loop e talvez por um delay antes de se poder fazer restart
+			jmp		loopf				; usar o temporisador dedicado para o delay
 
 
 
@@ -205,9 +206,8 @@ win:		push	r20
 			ldi		r21,0b00000000
 			ldi		meme,4
 			ldi		xl,0		
-spot2:		st		x+,r21
-			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
-			brne	spot2
-loopy:		nop		
-			;call	numerosv3
-			jmp		loopy
+spot2:		st		x+,r21					;esta parte serve para escrever o que mostrar no ecra mudando a ram
+			cp		xl,meme					
+			brne	spot2	
+			call	numerosv3
+			jmp		loopf					;loop fial

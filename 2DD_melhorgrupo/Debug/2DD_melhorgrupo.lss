@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm Wed Oct 18 20:08:41 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm Wed Oct 18 21:27:30 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
@@ -1386,13 +1386,13 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including fi
 000069 940e 004b                 			call	inic					; É como se fosse uma funçao vai para a primeira linha do inic  						
                                  			
                                  
-00006b 940c 008a                 clini:		jmp		fim
-00006d e029                      			ldi		contador,9
-00006e 3040                      			cpi		meme,0					;verifica se ja se escolheu todos os numeros
-00006f f0d1                      			breq	FIM
+                                 clini:		;jmp		fim					;linha so de teste
+00006b e029                      			ldi		contador,9
+00006c 3040                      			cpi		meme,0					;verifica se ja se escolheu todos os numeros
+00006d f0e1                      			breq	FIM
                                  
                                  ciclo:
-                                 			;call	numerosv3
+00006e 940e 00a1                 			call	numerosv3
                                  
 000070 f01e                      			brts	salto					;se a falg tiver limpa
 000071 9b80                      			sbis	PIND,0					;verifi o botao
@@ -1411,7 +1411,7 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including fi
                                  
                                  																			
 00007d 952a                      clo1:		dec		contador				;decresce
-00007e 940c 0070                 			jmp		ciclo
+00007e 940c 006e                 			jmp		ciclo
                                  clear:
 000080 e02a                      			ldi		contador,10				;da reset ao contador
 000081 940c 007d                 			jmp		clo1
@@ -1432,7 +1432,7 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including fi
 00008f 910d                      			LD		r16,X+
 000090 954a                      check:		dec		meme
 000091 3040                      			cpi		meme,0
-000092 f0f1                      			breq	WIN
+000092 f101                      			breq	WIN
 000093 911d                      			LD		r17,X+
 000094 1701                      			cp		r16,r17
 000095 f3d1                      			breq	check
@@ -1442,47 +1442,47 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including fi
 000098 910f                      			pop		r16
                                  
 000099 e044                      			ldi		meme,4
-00009a 9b81                      			sbis	PIND,1
+00009a 9b81                      loopF:		sbis	PIND,1
 00009b 940c 006b                 			jmp		clini
-00009d 940c 008a                 			jmp		fim
+00009d 940e 00a1                 			call	numerosv3		; falta escrever algo para o ecra de preferencia dora do loop e talvez por um delay antes de se poder fazer restart
+00009f 940c 009a                 			jmp		loopf				; usar o temporisador dedicado para o delay
                                  
                                  
                                  
                                  
                                  numerosv3:		; vai mostrar os numeros por ordem
-00009f 930f                      			push	r16	
-0000a0 932f                      			push	contador
-0000a1 e100                      			ldi		r16,0b00010000
-0000a2 9488                      			clc		;limpa o carry		
-0000a3 f048                      nloop:		brcs	ndone
-0000a4 bb02                      			out		PORTD,r16
-0000a5 912d                      			LD		contador,X+
+0000a1 930f                      			push	r16	
+0000a2 932f                      			push	contador
+0000a3 e100                      			ldi		r16,0b00010000
+0000a4 9488                      			clc		;limpa o carry		
+0000a5 f048                      nloop:		brcs	ndone
+0000a6 bb02                      			out		PORTD,r16
+0000a7 912d                      			LD		contador,X+
                                  
-0000a6 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
-0000a7 9124                      			lpm		contador,z		;vai ao local da memoria e carrega o o valor que la estiver
-0000a8 bb25                      			out		PORTC,contador
+0000a8 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
+0000a9 9124                      			lpm		contador,z		;vai ao local da memoria e carrega o o valor que la estiver
+0000aa bb25                      			out		PORTC,contador
                                  			;call	delaym	;
-0000a9 e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+0000ab e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
                                  
-0000aa 0f00                      			lsl		r16
-0000ab 940c 00a3                 			jmp		nloop
+0000ac 0f00                      			lsl		r16
+0000ad 940c 00a5                 			jmp		nloop
                                  
-0000ad e0a0                      ndone:		ldi		xl,0
-0000ae 912f                      			pop		contador
-0000af 910f                      			pop		r16
-0000b0 9508                      			ret	
+0000af e0a0                      ndone:		ldi		xl,0
+0000b0 912f                      			pop		contador
+0000b1 910f                      			pop		r16
+0000b2 9508                      			ret	
                                  
                                  
                                  
-0000b1 934f                      win:		push	r20
-0000b2 e050                      			ldi		r21,0b00000000
-0000b3 e044                      			ldi		meme,4
-0000b4 e0a0                      			ldi		xl,0		
-0000b5 935d                      spot2:		st		x+,r21
-0000b6 17a4                      			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
-0000b7 f7e9                      			brne	spot2
-0000b8 0000                      loopy:		nop		
-                                 			;call	numerosv3
+0000b3 934f                      win:		push	r20
+0000b4 e050                      			ldi		r21,0b00000000
+0000b5 e044                      			ldi		meme,4
+0000b6 e0a0                      			ldi		xl,0		
+0000b7 935d                      spot2:		st		x+,r21					;esta parte serve para escrever o que mostrar no ecra mudando a ram
+0000b8 17a4                      			cp		xl,meme					
+0000b9 f7e9                      			brne	spot2	
+0000ba 940e 00a1                 			call	numerosv3
 
 
 RESOURCE USE INFORMATION
@@ -1513,14 +1513,14 @@ andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0
 brcc  :   0 brcs  :   1 break :   0 breq  :   5 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   1 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   1 cbi   :   0 cbr   :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   4 cbi   :   0 cbr   :   0 
 clc   :   1 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   1 clv   :   0 clz   :   0 com   :   0 cp    :   3 cpc   :   0 
 cpi   :   3 cpse  :   0 dec   :   3 elpm  :   0 eor   :   0 fmul  :   0 
 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 
-jmp   :  12 ld    :   3 ldd   :   0 ldi   :  29 lds   :   0 lpm   :   2 
+jmp   :  11 ld    :   3 ldd   :   0 ldi   :  29 lds   :   0 lpm   :   2 
 lsl   :   1 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
-mulsu :   0 neg   :   0 nop   :   1 or    :   0 ori   :   0 out   :  10 
+mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  10 
 pop   :   5 push  :   6 rcall :   0 ret   :   2 reti  :   0 rjmp  :   0 
 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   1 
 sbis  :   2 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
@@ -1528,12 +1528,12 @@ seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   1
 sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   6 std   :   0 
 sts   :   0 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
-Instructions used: 25 out of 114 (21.9%)
+Instructions used: 24 out of 114 (21.1%)
 
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000176    228     10    238  131072   0.2%
+[.cseg] 0x000000 0x00017c    234     10    244  131072   0.2%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
