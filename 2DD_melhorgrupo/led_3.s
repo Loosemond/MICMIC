@@ -54,17 +54,17 @@
 
 .org 0x0 ;defina a o sitio na memoria
 
-		jmp main ;começa o programa na func main 
+		jmp main ;comeÃ§a o programa na func main 
 
 .cseg
 
-.org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
+.org 0x46 ; estamos a deixar espaÃ§o para adicionarmos mais codigo antes da execuÃ§Ã£o do prog
 
 table:
 
 .db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove
 
-;------------------------------Inicialização----------------------------
+;------------------------------InicializaÃ§Ã£o----------------------------
 
 inic:		
 
@@ -75,7 +75,7 @@ inic:
 			ldi	r17,0b11111111
 			ldi	r28,0b10111111
 			ldi	r29,0b01111111
-			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
+			out DDRD,r16		;define que parte Ã© entrada e saida 1 Ã© saida 	
 			out	DDRC,r17		
 			out DDRA,r17
 			out	PORTC,r17  ;desliga os leds do display
@@ -83,7 +83,7 @@ inic:
 			out PORTA,r28
 
 			ldi	contador,0b00001001	;nove
-			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
+			ret					; Indica o fim da funÃ§ao e vai pra a linha assegir de Call inic
 
 
 
@@ -91,11 +91,11 @@ inic:
 
 main:		
 
-			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereÃ§o 0x10ff num sistema em que so temos 8bits. 
 			out		spl,r16
 			ldi		r16,0x10
 			out		sph,r16
-			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
+			call	inic				; Ã‰ como se fosse uma funÃ§ao vai para a primeira linha do inic  						
 			jmp		numerosv2
 
 
@@ -191,9 +191,9 @@ delaym:						; da um atraso
 
 			ldi		r22,0		;z 14 0
 
-cciclo0:		ldi		r21,4		;y 14
+cciclo0:		ldi		r21,14		;y 14
 
-cciclo1:		ldi		r20,2	;x 20
+cciclo1:		ldi		r20,20	;x 20
 
 cciclo2:		dec		r20
 
@@ -228,9 +228,9 @@ delaymax:						; da um atraso
 
 			ldi		r22,0		;z 0
 
-ciclo0:		ldi		r21,20		;y 200
+ciclo0:		ldi		r21,200		;y 200
 
-ciclo1:		ldi		r20,10		;x	100
+ciclo1:		ldi		r20,100		;x	100
 
 ciclo2:		dec		r20
 
