@@ -106,46 +106,49 @@ inic:
 
 main:		
 
-			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+			ldi		r16,0xff				;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
 			out		spl,r16
 			ldi		r16,0x10
 			out		sph,r16
-			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
+			call	inic					; É como se fosse uma funçao vai para a primeira linha do inic  						
 			
 
 clini:		ldi		contador,9
-			cpi		meme,0	;verifica se ja se escolheu todos os numeros
+			cpi		meme,0					;verifica se ja se escolheu todos os numeros
 			breq	FIM
 
 ciclo:
-			call	numerosv3
-			sbis	PIND,0	;carregar no butao
-			jmp		STOP
+			;call	numerosv3
 
-			cpi		contador,0	;verificar se o contador chega a 0
+			brts	salto					;se a falg tiver limpa
+			sbis	PIND,0					;verifi o botao
+			jmp		STOP
+salto:		sbic	PIND,0					;verifica se larguei o butao
+			clt						;limpa a flag
+
+			cpi		contador,0				;verificar se o contador chega a 0
 			breq	clear
 					
 spot1:		st		x+,contador
-			cp		xl,meme		;verificar quando é que escreveu na memoria de todos os ecras
+			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
 			breq	clear2	
 			jmp		spot1	
 
 
-																			; se for igual vai para seq		
-clo1:		dec		contador	;decresce
+																			
+clo1:		dec		contador				;decresce
 			jmp		ciclo
 clear:
-			ldi		contador,10	;da reset ao contador
+			ldi		contador,10				;da reset ao contador
 			jmp		clo1
 
-clear2:		ldi		xl,0		;da reset ao ponteiro da ram
+clear2:		ldi		xl,0					;da reset ao ponteiro da ram
 			jmp		clo1
 
 STOP:		dec		meme
-			bset	0
-stop2:		sbic	PIND,0
+			set
 			jmp		clini
-			jmp		stop2
+			
 
 FIM:					
 
@@ -153,10 +156,6 @@ FIM:
 			sbis	PIND,1
 			jmp		clini
 			jmp		fim
-
-
-
-
 
 numerosv3:		; vai mostrar os numeros por ordem
 			push	r16	

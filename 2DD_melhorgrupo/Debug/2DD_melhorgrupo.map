@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm Wed Oct 18 17:19:20 2017
+AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm Wed Oct 18 19:10:42 2017
 
 
 EQU  SIGNATURE_000 0000001e
@@ -883,16 +883,16 @@ CSEG main         00000065
 CSEG table        00000046
 CSEG inic         0000004b
 CSEG clini        0000006b
-CSEG FIM          0000008a
+CSEG FIM          00000088
 CSEG ciclo        0000006e
-CSEG numerosv3    00000090
-CSEG STOP         00000083
-CSEG clear        0000007d
-CSEG spot1        00000075
-CSEG clear2       00000080
-CSEG clo1         0000007a
-CSEG stop2        00000085
-CSEG nloop        00000094
-CSEG ndone        0000009e
-CSEG delaym       000000a2
-CSEG L1           000000a6
+CSEG salto        00000072
+CSEG STOP         00000084
+CSEG clear        0000007e
+CSEG spot1        00000076
+CSEG clear2       00000081
+CSEG clo1         0000007b
+CSEG numerosv3    0000008e
+CSEG nloop        00000092
+CSEG ndone        0000009c
+CSEG delaym       000000a0
+CSEG L1           000000a4
