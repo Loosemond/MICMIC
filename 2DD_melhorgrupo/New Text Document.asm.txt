@@ -58,7 +58,7 @@
 
 .org 0x0 ;defina a o sitio na memoria
 
-		jmp main ;comeÃ§a o programa na func main 
+		jmp main ;começa o programa na func main 
 .org	0x02
 		jmp int_int0
 .org	0x04
@@ -68,13 +68,13 @@
 		jmp int_tc0
 .cseg
 
-.org 0x46 ; estamos a deixar espaÃ§o para adicionarmos mais codigo antes da execuÃ§Ã£o do prog
+.org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
 
 table:
 
 .db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove,ap
 
-;------------------------------InicializaÃ§Ã£o----------------------------
+;------------------------------Inicialização----------------------------
 
 inic:		
 			;interrupt----------------------------
@@ -94,14 +94,14 @@ inic:
 			
 
 			ldi temp,24  ;1ms mudar para 124
-			out ocr0,temp		; Ã© o valor que maximo que o contador conta
+			out ocr0,temp		; é o valor que maximo que o contador conta
 
 			ldi	cnt_int,tempo1	;contador de 5ms
 
 			clr temp  ; se tiver as 0 esta parado
 			out tccr0,temp
 
-			in r16,TIMSK	;activa a interrupÃ§ao do tc0
+			in r16,TIMSK	;activa a interrupçao do tc0
 			ori r16,0b00000010
 			out timsk,r16
  			
@@ -126,17 +126,17 @@ inic:
 			ldi	r17,0b11111111
 			ldi	r28,0b11111111
 			ldi	r29,0b01111111
-			out DDRD,r16		;define que parte Ã© entrada e saida 1 Ã© saida 	
+			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
 			out	DDRC,r17		
 			out DDRA,r17
 			out	PORTC,r17  ;desliga os leds do display
-			out	PORTD,r16  ; 0 desliga os pull ups  Ã© preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
+			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
 			out PORTA,r28
 			ldi r29,0b00000000
 			ldi	contador,0b00000000	
 			ldi timer2,delay
 			ldi	timer3,delay2
-			ret					; Indica o fim da funÃ§ao e vai pra a linha assegir de Call inic
+			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 
 
@@ -146,11 +146,11 @@ inic:
 
 main:		
 
-			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereÃ§o 0x10ff num sistema em que so temos 8bits. 
+			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
 			out		spl,r16
 			ldi		r16,0x10
 			out		sph,r16
-			call	inic				; Ã‰ como se fosse uma funÃ§ao vai para a primeira linha do inic  						
+			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
 			
 cicloini0:	
 
@@ -180,7 +180,7 @@ int_int1:
 
 int_tc0:
 			dec		cnt_int
-			brne	f_int			; verifica se Ã© 0
+			brne	f_int			; verifica se é 0
 			ldi		cnt_int,tempo1
 
 			call	numerosv2
@@ -188,12 +188,20 @@ int_tc0:
 			
 			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
 			dec     timer2
-			brne	reset3
+			brne	outtco
 			;sbiw		X,1				; vai contar 3s 
 			;brne	reset2
-
+reset3:		push contador
+			ldi	 contador,10		
+			call numerosv2
+			pop	contador
+			dec timer3
+			brne reset3
 			reti
 
+outtco			
+			reti
+			;set					;activa a flag t escrever a qui o codigo
 
 salto1:		inc		contador
 
@@ -205,7 +213,8 @@ f_int:
 			reti
 
 reset:		ldi		contador,0
-			reti
+			sei
+			jmp		cicloini0
 
 reset2:		ldi		contador,0
 			ldi		xh,high(600) ;3segundos por 600
@@ -213,16 +222,10 @@ reset2:		ldi		contador,0
 			call	numerosv2
 			reti
 
-reset3:		push contador
-			ldi	 contador,10		
-			call numerosv2
-			pop	contador
-			dec timer3
-			brne reset3
-			reti
+
 			
 reset4:		ldi timer3,delay2
 			ldi timer2,delay
 			reti
 
-			
+
