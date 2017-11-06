@@ -7,7 +7,7 @@
   <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc</FILE>
  </INCLUDED_FILES>
@@ -22,10 +22,19 @@
   <FILE>2DD_melhorgrupo.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <main><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm</FILE><LINE>28</LINE></main>
-  <inic><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm</FILE><LINE>18</LINE></inic>
-  <ciclo><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm</FILE><LINE>38</LINE></ciclo>
-  <inver2><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm</FILE><LINE>67</LINE></inver2>
-  <clear><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm</FILE><LINE>59</LINE></clear>
+  <main><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>143</LINE></main>
+  <int_int0><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>161</LINE></int_int0>
+  <int_int1><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>167</LINE></int_int1>
+  <int_tc0><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>177</LINE></int_tc0>
+  <table><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>72</LINE></table>
+  <inic><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>78</LINE></inic>
+  <cicloini0><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>151</LINE></cicloini0>
+  <numerosv2><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>155</LINE></numerosv2>
+  <f_int><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>201</LINE></f_int>
+  <salto1><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>194</LINE></salto1>
+  <reset3><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>214</LINE></reset3>
+  <reset><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>204</LINE></reset>
+  <reset2><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>207</LINE></reset2>
+  <reset4><FILE>C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm</FILE><LINE>223</LINE></reset4>
  </LABELS>
 </ASSEMBLER_INFO>

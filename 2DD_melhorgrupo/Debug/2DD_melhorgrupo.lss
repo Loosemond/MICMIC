@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.6  C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm Tue Oct 03 21:56:29 2017
+AVRASM ver. 2.2.6  C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm Mon Nov 06 16:36:23 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
                                  
                                  ;
                                  
@@ -1225,14 +1225,23 @@ C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm(10): Inc
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
+                                 
                                  ; 2DD_melhorgrupo.asm
+                                 
                                  ;
+                                 
                                  ; Created: 27/09/2017 08:30:19
+                                 
                                  ; Author : IEEE
+                                 
                                  ;
+                                 
+                                 
+                                 
                                  
                                  
                                  ; Replace with your application code
+                                 
                                  .include <m128def.inc>
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega128.xml ***********
@@ -1277,89 +1286,218 @@ C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm(10): Inc
                                  #endif  /* _M128DEF_INC_ */
                                  
                                  ; ***** END OF FILE ******************************************************
+                                 .def		timer2 = r23
+                                 .def		timer3 = r24
+                                 .def		cnt_int= r20
+                                 
+                                 .def		temp	= r25
+                                 
+                                 .def		display	= r19
+                                 
+                                 .def		contador = r18	; muda o nome
+                                 
+                                 .equ		tempo1 =5
+                                 
+                                 .equ		zero	= 0xC0
+                                 
+                                 .equ		um		= 0xf9
+                                 
+                                 .equ		dois	= 0xa4
+                                 
+                                 .equ		tres	= 0xb0
+                                 
+                                 .equ		quatro	= 0x99
+                                 
+                                 .equ		cinco	= 0x92
+                                 
+                                 .equ		seis	= 0x82
+                                 
+                                 .equ		sete	= 0xf8
+                                 
+                                 .equ		oito	= 0x80
+                                 
+                                 .equ		nove	= 0x90
+                                 
+                                 .equ        ap	= 0xff
+                                 
+                                 
                                  
                                  .cseg ; reset de vector
+                                 
                                  .org 0x0 ;defina a o sitio na memoria
-000000 940c 004b                 		jmp main ;começa o programa na func main 
+                                 
+000000 940c 0075                 		jmp main ;começa o programa na func main 
+                                 .org	0x02
+000002 940c 0082                 		jmp int_int0
+                                 .org	0x04
+000004 940c 0085                 		jmp	int_int1
+                                 
+                                 .org	0x1E
+00001e 940c 0088                 		jmp int_tc0
                                  .cseg
+                                 
                                  .org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
+                                 
+                                 table:
+                                 
+000046 f9c0
+000047 b0a4
+000048 9299
+000049 f882
+00004a 9080
+C:\Users\Jo�o Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(74): warning: .cseg .db misalignment - padding zero byte
+00004b 00ff                      .db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove,ap
+                                 
                                  ;------------------------------Inicialização----------------------------
-000046 ef0f                      inic:		ldi r16,0b11111111;		vai servir para configurar as saidas e as entradas, temos de escrever todas a portas do PORTA  de uma vez so dai temos 8.
-000047 bb0a                      			out DDRA,r16 ;			aqui é que se passa os valor em r16 para o PORTA ????
                                  
-                                 			;ldi r16,0b11111111; Vai indicar que os led tao desligados pois 1 representa off
-000048 bb04                      			out DDRC,r16		;DDRC índica nos que é o PORTC
-000049 e010                      			ldi r17,0b00000000	;limpa o r17
+                                 inic:		
+                                 			;interrupt----------------------------
+00004c ec90                      			ldi	temp,0b11000000
+00004d bb91                      			out	ddrd,temp
+00004e bb92                      			out portd,temp
                                  
-00004a 9508                      			ret						; Indica o fim da funçao e vai pra a linha assegir de Call inic
+00004f e09a                      			ldi	temp,0b00001010	;fanlco ascendente
+000050 9390 006a                 			sts	eicra,temp		;store direct to dat space
+                                 
+000052 e093                      			ldi	temp,0b00000011	; activa os interupts 
+000053 bf99                      			out	eimsk,temp
+                                 
+000054 9478                      			sei					;activa os interrupts
+                                 			
+                                 			;timers--------------------------------
+                                 			
+                                 
+000055 e198                      			ldi temp,24  ;1ms mudar para 124
+000056 bf91                      			out ocr0,temp		; é o valor que maximo que o contador conta
+                                 
+000057 e045                      			ldi	cnt_int,tempo1	;contador de 5ms
+                                 
+000058 2799                      			clr temp  ; se tiver as 0 esta parado
+000059 bf93                      			out tccr0,temp
+                                 
+00005a b707                      			in r16,TIMSK	;activa a interrupçao do tc0
+00005b 6002                      			ori r16,0b00000010
+00005c bf07                      			out timsk,r16
+00005d e09d                       			ldi		temp,0b00001101
+00005e bf93                      			out		tccr0,temp
+00005f 9468                      			bset		6
+                                 
+                                 			;---------------------------------------
+                                 
+                                 
+                                 
+000060 e8ec                      			ldi	zl,low(table*2)
+000061 e0f0                      			ldi zh,high(table*2)
+000062 e0b0                      			ldi xh,high(1) ;3segundos
+000063 e0a1                      			ldi xl,low(1)
+000064 e674                      			ldi	timer2,100
+                                 
+000065 e069                      			ldi	r22,9
+000066 ec00                      			ldi r16,0b11000000;	0 quer dizer input e 1 out		
+000067 ef1f                      			ldi	r17,0b11111111
+000068 efcf                      			ldi	r28,0b11111111
+000069 e7df                      			ldi	r29,0b01111111
+00006a bb01                      			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
+00006b bb14                      			out	DDRC,r17		
+00006c bb1a                      			out DDRA,r17
+00006d bb15                      			out	PORTC,r17  ;desliga os leds do display
+00006e bb02                      			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
+00006f bbcb                      			out PORTA,r28
+000070 e0d0                      			ldi r29,0b00000000
+000071 e020                      			ldi	contador,0b00000000	
+000072 e674                      			ldi timer2,100
+000073 e684                      			ldi	timer3,100
+000074 9508                      			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
+                                 
+                                 
                                  
                                  ;---------------------------Programa Principal--------------------------
-                                 main:
-00004b ef0f                      		ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
-00004c bf0d                      		out		spl,r16
-00004d e100                      		ldi		r16,0x10
-00004e bf0e                      		out		sph,r16
-                                 
-00004f 940e 0046                 		call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  
                                  
                                  
-                                 						
-                                 ciclo:
-000051 b319                      		in		r17,PINA			;le PORTA para r16
-000052 2f01                      		mov		r16,r17
-                                 				
-000053 3011                      		cpi		r17,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.						;						
-000054 f071                      		breq	inver2				; Caso r17=0b00000001 salta para inver2
-                                 		
-000055 3012                      		cpi		r17,0b00000010		
-000056 f061                      		breq	inver2
-                                 		
-000057 3014                      		cpi		r17,0b00000100		
-000058 f051                      		breq	inver2									
+                                 
+                                 main:		
+                                 
+000075 ef0f                      			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+000076 bf0d                      			out		spl,r16
+000077 e100                      			ldi		r16,0x10
+000078 bf0e                      			out		sph,r16
+000079 940e 004c                 			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
                                  			
-000059 3018                      		cpi		r17,0b00001000		
-00005a f041                      		breq	inver2	
-                                 				
-00005b 3110                      		cpi		r17,0b0010000		; Apaga os leds 	
-00005c f011                      		breq	clear
-                                 												
-00005d 940c 0051                 		jmp		ciclo			
+                                 cicloini0:	
                                  
-                                 clear:	
-00005f e000                      		ldi		r16,0b00000000 ;  apaga todos os leds serve para trocar o togle 
-000060 bb05                      		out		PORTC,r16
+00007b 940c 007b                 			jmp		cicloini0
+                                 
+                                 numerosv2:			
+00007d 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
+00007e 9134                      			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
+00007f bb35                      			out		PORTC,display	;
+000080 e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+000081 9508                      			ret	
+                                 int_int0:
+000082 94e8                      			bclr	6 ; limpa a flag
+                                 			
+000083 bbdb                      			out			PORTA,r29			
+000084 9518                      			reti
+                                 
+                                 int_int1:
                                  		
-000061 940c 0051                 		jmp		ciclo
-                                 		
+                                 			;ldi temp,0
+                                 			;out tccr0,temp ; vamos querer o temporisador a trabalhar na mesma 
+                                 			; temos de fazer piscar usnado um delay 3 s
+                                 			;sbiw x decrementa uma word 
+000085 9468                      			bset		6 ; activa a flag
+000086 bb1b                      			out			PORTA,r17
+000087 9518                      			reti
                                  
+                                 int_tc0:
+000088 954a                      			dec		cnt_int
+000089 f479                      			brne	f_int			; verifica se é 0
+00008a e045                      			ldi		cnt_int,tempo1
                                  
-                                 Inver2:
-                                 		
-000063 9502                      		swap	r16 ; troca os primeiros 4 bits pelos ultimos 	antes: 0000 0001	depois: 0001 0000
+00008b 940e 007d                 			call	numerosv2
                                  
-000064 fb04                      		bst		r16,4	;faz load do bit do r para T   isto vai inverter metade dos bits no proprio registo
-000065 f903                      		bld		r16,3	; escreve o bit de T em r18	
+                                 			
+00008d f42e                      			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
+00008e 957a                      			dec     timer2
+00008f f4a1                      			brne	reset3
+                                 			;sbiw		X,1				; vai contar 3s 
+                                 			;brne	reset2
+000090 9478                      			sei
+000091 940c 007b                 			jmp		cicloini0
+                                 			;set					;activa a flag t escrever a qui o codigo
                                  
-000066 fb05                      		bst		r16,5	
-000067 f902                      		bld		r16,2
+000093 9523                      salto1:		inc		contador
                                  
-000068 fb06                      		bst		r16,6	
-000069 f901                      		bld		r16,1
+000094 302a                      			cpi		contador,10
+000095 f021                      			breq	reset
+000096 9478                      			sei
+000097 940c 007b                 			jmp		cicloini0
                                  
-                                 		
-00006a fb07                      		bst		r16,7	
-00006b f900                      		bld		r16,0
-                                 						; antes de inverter 0001 000 depois: 0001 1000 pois inverte no proprio registo 
-00006c bb05                      		out		PORTC,r16
+                                 f_int:		
+000099 9518                      			reti
                                  
-00006d 940c 0051                 		jmp		ciclo
+00009a e020                      reset:		ldi		contador,0
+00009b 9518                      			reti
                                  
-                                 				
+00009c e020                      reset2:		ldi		contador,0
+00009d e0b0                      			ldi		xh,high(6) ;3segundos por 600
+00009e e0a6                      			ldi		xl,low(6)
+00009f 940e 007d                 			call	numerosv2
+0000a1 9478                      			sei
+0000a2 940c 007b                 			jmp		cicloini0
                                  
-                                 
-                                 
-                                 
-                                 		
+0000a4 932f                      reset3:		push contador
+0000a5 e02a                      			ldi	 contador,10		
+0000a6 940e 007d                 			call numerosv2
+0000a8 912f                      			pop	contador
+0000a9 958a                      			dec timer3
+0000aa f7c9                      			brne reset3
+0000ab 9478                      			sei
+0000ac 940c 007b                 			jmp cicloini0
+                                 			
+0000ae e684                      reset4:		ldi timer3,100
+0000af e674                      			ldi timer2,100
+0000b0 9478                      			sei
 
 
 RESOURCE USE INFORMATION
@@ -1377,41 +1515,41 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega128" register use summary:
-x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   0 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  20 r17:   8 r18:   0 r19:   0 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
-r29:   0 r30:   0 r31:   0 
-Registers used: 2 out of 35 (5.7%)
+r13:   0 r14:   0 r15:   0 r16:  10 r17:   5 r18:   9 r19:   2 r20:   3 
+r21:   0 r22:   1 r23:   4 r24:   3 r25:  13 r26:   2 r27:   2 r28:   2 
+r29:   3 r30:   3 r31:   1 
+Registers used: 16 out of 35 (45.7%)
 
 "ATmega128" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
-andi  :   0 asr   :   0 bclr  :   0 bld   :   4 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   5 brge  :   0 brhc  :   0 
+.lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
+andi  :   0 asr   :   0 bclr  :   1 bld   :   0 brbc  :   0 brbs  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   4 call  :   1 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
+brne  :   3 brpl  :   0 brsh  :   0 brtc  :   1 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   2 bst   :   0 call  :   4 cbi   :   0 cbr   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   5 cpse  :   0 dec   :   0 elpm  :   0 eor   :   0 fmul  :   0 
-fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 
-jmp   :   4 ld    :   0 ldd   :   0 ldi   :   5 lds   :   0 lpm   :   0 
-lsl   :   0 lsr   :   0 mov   :   1 movw  :   0 mul   :   0 muls  :   0 
-mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   6 
-pop   :   0 push  :   0 rcall :   0 ret   :   1 reti  :   0 rjmp  :   0 
+cpi   :   1 cpse  :   0 dec   :   3 elpm  :   0 eor   :   0 fmul  :   0 
+fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   1 
+jmp   :  10 ld    :   0 ldd   :   0 ldi   :  31 lds   :   0 lpm   :   2 
+lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
+mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  18 
+pop   :   1 push  :   1 rcall :   0 ret   :   2 reti  :   4 rjmp  :   0 
 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 
 sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
-seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 
+seh   :   0 sei   :   6 sen   :   0 ser   :   0 ses   :   0 set   :   0 
 sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 
-sts   :   0 sub   :   0 subi  :   0 swap  :   1 tst   :   0 wdr   :   0 
+sts   :   1 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
-Instructions used: 12 out of 114 (10.5%)
+Instructions used: 23 out of 114 (20.2%)
 
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000de     86      0     86  131072   0.1%
+[.cseg] 0x000000 0x000166    222     12    234  131072   0.2%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
-Assembly complete, 0 errors, 0 warnings
+Assembly complete, 0 errors, 1 warnings

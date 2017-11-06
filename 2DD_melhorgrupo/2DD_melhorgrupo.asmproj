@@ -15,7 +15,7 @@
     <Name>2DD_melhorgrupo</Name>
     <RootNamespace>2DD_melhorgrupo</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\slot.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\microsolt.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -97,6 +97,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="led_2.asm">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="microsolt.asm">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="slot.asm">

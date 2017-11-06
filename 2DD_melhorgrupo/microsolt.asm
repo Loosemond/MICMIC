@@ -17,7 +17,8 @@
 ; Replace with your application code
 
 .include <m128def.inc>
-
+.def		timer2 = r23
+.def		timer3 = r24
 .def		cnt_int= r20
 
 .def		temp	= r25
@@ -48,7 +49,7 @@
 
 .equ		nove	= 0x90
 
-
+.equ        ap	= 0xff
 
 
 
@@ -70,7 +71,7 @@
 
 table:
 
-.db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove
+.db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove,ap
 
 ;------------------------------Inicialização----------------------------
 
@@ -91,7 +92,7 @@ inic:
 			;timers--------------------------------
 			
 
-			ldi temp,124  ;1ms
+			ldi temp,24  ;1ms mudar para 124
 			out ocr0,temp		; é o valor que maximo que o contador conta
 
 			ldi	cnt_int,tempo1	;contador de 5ms
@@ -102,7 +103,9 @@ inic:
 			in r16,TIMSK	;activa a interrupçao do tc0
 			ori r16,0b00000010
 			out timsk,r16
- 
+ 			ldi		temp,0b00001101
+			out		tccr0,temp
+			bset		6
 
 			;---------------------------------------
 
@@ -110,6 +113,10 @@ inic:
 
 			ldi	zl,low(table*2)
 			ldi zh,high(table*2)
+			ldi xh,high(1) ;3segundos
+			ldi xl,low(1)
+			ldi	timer2,100
+
 			ldi	r22,9
 			ldi r16,0b11000000;	0 quer dizer input e 1 out		
 			ldi	r17,0b11111111
@@ -122,8 +129,9 @@ inic:
 			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
 			out PORTA,r28
 			ldi r29,0b00000000
-			ldi	contador,0b00000000	;nove
-
+			ldi	contador,0b00000000	
+			ldi timer2,100
+			ldi	timer3,100
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 
@@ -151,19 +159,18 @@ numerosv2:
 			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
 			ret	
 int_int0:
-	
-			ldi temp,0b00001101
-			out tccr0,temp
+			bclr	6 ; limpa a flag
+			
 			out			PORTA,r29			
 			reti
 
 int_int1:
 		
-			ldi temp,0
-			out tccr0,temp ; vamos querer o temporisador a trabalhar na mesma 
+			;ldi temp,0
+			;out tccr0,temp ; vamos querer o temporisador a trabalhar na mesma 
 			; temos de fazer piscar usnado um delay 3 s
 			;sbiw x decrementa uma word 
-			
+			bset		6 ; activa a flag
 			out			PORTA,r17
 			reti
 
@@ -174,17 +181,50 @@ int_tc0:
 
 			call	numerosv2
 
-			cpi		contador,9
-			breq	reset
 			
-
-			inc		contador
+			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
+			dec     timer2
+			brne	reset3
+			;sbiw		X,1				; vai contar 3s 
+			;brne	reset2
 			sei
 			jmp		cicloini0
 			;set					;activa a flag t escrever a qui o codigo
 
+salto1:		inc		contador
+
+			cpi		contador,10
+			breq	reset
+			sei
+			jmp		cicloini0
+
 f_int:		
 			reti
 
-reset:		ldi	contador,0
+reset:		ldi		contador,0
 			reti
+
+reset2:		ldi		contador,0
+			ldi		xh,high(6) ;3segundos por 600
+			ldi		xl,low(6)
+			call	numerosv2
+			sei
+			jmp		cicloini0
+
+reset3:		push contador
+			ldi	 contador,10		
+			call numerosv2
+			pop	contador
+			dec timer3
+			brne reset3
+			sei
+			jmp cicloini0
+			
+reset4:		ldi timer3,100
+			ldi timer2,100
+			sei
+			jmp	cicloini0
+
+
+
+			
