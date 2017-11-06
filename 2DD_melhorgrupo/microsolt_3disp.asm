@@ -57,7 +57,7 @@
 
 .org 0x0 ;defina a o sitio na memoria
 
-		jmp main ;comeÃ§a o programa na func main 
+		jmp main ;começa o programa na func main 
 .org	0x02
 		jmp int_int0
 .org	0x04
@@ -67,13 +67,13 @@
 		jmp int_tc0
 .cseg
 
-.org 0x46 ; estamos a deixar espaÃ§o para adicionarmos mais codigo antes da execuÃ§Ã£o do prog
+.org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
 
 table:
 
 .db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove,ap
 
-;------------------------------InicializaÃ§Ã£o----------------------------
+;------------------------------Inicialização----------------------------
 
 inic:		
 			;interrupt----------------------------
@@ -93,14 +93,14 @@ inic:
 			
 
 			ldi temp,24  ;1ms mudar para 124
-			out ocr0,temp		; Ã© o valor que maximo que o contador conta
+			out ocr0,temp		; é o valor que maximo que o contador conta
 
 			ldi	cnt_int,tempo1	;contador de 5ms
 
 			clr temp  ; se tiver as 0 esta parado
 			out tccr0,temp
 
-			in r16,TIMSK	;activa a interrupÃ§ao do tc0
+			in r16,TIMSK	;activa a interrupçao do tc0
 			ori r16,0b00000010
 			out timsk,r16
  			ldi		temp,0b00001101
@@ -108,32 +108,44 @@ inic:
 			bset		6
 
 			;---------------------------------------
-			
-			
+
+
 
 			ldi	zl,low(table*2)
 			ldi zh,high(table*2)
-			ldi xh,high(1) ;3segundos
-			ldi xl,low(1)
-			ldi	timer2,100
+			;ldi xh,high(1) ;3segundos
+			;ldi xl,low(1)
+			ldi	xl,00 ; o x representa o contador!
+			ldi	xh,0x10
+			ldi	yl,00
+			ldi	yh,09
 
+			ldi r19,11000000
+			st  y+,r19  ; vai guardar qual display tou a usar serve para ter a ordem certa.
+			ldi r19,10000000
+			st  y+,r19
+			ldi r19,01000000
+			st  y,r19
+			ldi	yl,00 ;reset ao ponteiro y
+			
 
 			ldi	r22,9
 			ldi r16,0b11000000;	0 quer dizer input e 1 out		
 			ldi	r17,0b11111111
 			ldi	r28,0b11111111
 			ldi	r29,0b01111111
-			out DDRD,r16		;define que parte Ã© entrada e saida 1 Ã© saida 	
+			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
 			out	DDRC,r17		
 			out DDRA,r17
 			out	PORTC,r17  ;desliga os leds do display
-			out	PORTD,r16  ; 0 desliga os pull ups  Ã© preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
+			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
 			out PORTA,r28
 			ldi r29,0b00000000
 			ldi	contador,0b00000000	
 			ldi timer2,delay
 			ldi	timer3,delay
-			ret					; Indica o fim da funÃ§ao e vai pra a linha assegir de Call inic
+
+			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 
 
@@ -143,21 +155,29 @@ inic:
 
 main:		
 
-			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereÃ§o 0x10ff num sistema em que so temos 8bits. 
+			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
 			out		spl,r16
 			ldi		r16,0x10
 			out		sph,r16
-			call	inic				; Ã‰ como se fosse uma funÃ§ao vai para a primeira linha do inic  						
+			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
 			
 cicloini0:	
 
 			jmp		cicloini0
 
-numerosv2:			
+numerosv2:		
+			push	r18
+			;vai mudar o display que mostramos :)	
+			cpi		yl,4
+			breq	reset5
+tag1:		LD		r18,y+
+			OUT		PORTD,r18
+			;------------
 			add		zl,contador		;soma o numero que se vai querer colocar no display 			
 			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
 			out		PORTC,display	;
 			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+			pop		r18
 			ret	
 int_int0:
 			bclr	6 ; limpa a flag
@@ -177,17 +197,13 @@ int_int1:
 
 int_tc0:
 			dec		cnt_int
-			brne	f_int			; verifica se Ã© 0
+			brne	f_int			; verifica se é 0
 			ldi		cnt_int,tempo1
 
-			call	numerosv2
-
-			
+			call	numerosv2			
 			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
 			dec     timer2
 			brne	reset3
-			;sbiw		X,1				; vai contar 3s 
-			;brne	reset2
 			sei
 			jmp		cicloini0
 			;set					;activa a flag t escrever a qui o codigo
@@ -202,6 +218,8 @@ salto1:		inc		contador
 f_int:		
 			reti
 
+reset5:		ldi		yl,0;rest do apontador
+			jmp		tag1
 reset:		ldi		contador,0
 			reti
 
@@ -225,7 +243,3 @@ reset4:		ldi timer3,delay
 			ldi timer2,delay
 			sei
 			jmp	cicloini0
-
-
-
-			

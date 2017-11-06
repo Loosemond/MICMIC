@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.6  C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm Mon Nov 06 16:36:23 2017
+AVRASM ver. 2.2.6  C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm Mon Nov 06 16:53:14 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\slot.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
                                  
                                  ;
                                  
@@ -1286,17 +1286,17 @@ C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19):
                                  #endif  /* _M128DEF_INC_ */
                                  
                                  ; ***** END OF FILE ******************************************************
-                                 .def		timer2 = r23
-                                 .def		timer3 = r24
-                                 .def		cnt_int= r20
                                  
-                                 .def		temp	= r25
                                  
-                                 .def		display	= r19
+                                 
+                                 
+                                 .def		meme		= r20
+                                 ;.def		displayA	= r19
+                                 ;.def		displayB	= r19
+                                 ;.def		displayC	= r19
+                                 ;.def		displayD	= r19
                                  
                                  .def		contador = r18	; muda o nome
-                                 
-                                 .equ		tempo1 =5
                                  
                                  .equ		zero	= 0xC0
                                  
@@ -1318,7 +1318,7 @@ C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19):
                                  
                                  .equ		nove	= 0x90
                                  
-                                 .equ        ap	= 0xff
+                                 
                                  
                                  
                                  
@@ -1326,17 +1326,11 @@ C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19):
                                  
                                  .org 0x0 ;defina a o sitio na memoria
                                  
-000000 940c 0075                 		jmp main ;comeÃ§a o programa na func main 
-                                 .org	0x02
-000002 940c 0082                 		jmp int_int0
-                                 .org	0x04
-000004 940c 0085                 		jmp	int_int1
+000000 940c 0065                 		jmp main ;começa o programa na func main 
                                  
-                                 .org	0x1E
-00001e 940c 0088                 		jmp int_tc0
                                  .cseg
                                  
-                                 .org 0x46 ; estamos a deixar espaÃ§o para adicionarmos mais codigo antes da execuÃ§Ã£o do prog
+                                 .org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
                                  
                                  table:
                                  
@@ -1344,160 +1338,151 @@ C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(19):
 000047 b0a4
 000048 9299
 000049 f882
-00004a 9080
-C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt.asm(74): warning: .cseg .db misalignment - padding zero byte
-00004b 00ff                      .db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove,ap
+00004a 9080                      .db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove
                                  
-                                 ;------------------------------InicializaÃ§Ã£o----------------------------
+                                 ;------------------------------Inicialização----------------------------
                                  
                                  inic:		
-                                 			;interrupt----------------------------
-00004c ec90                      			ldi	temp,0b11000000
-00004d bb91                      			out	ddrd,temp
-00004e bb92                      			out portd,temp
                                  
-00004f e09a                      			ldi	temp,0b00001010	;fanlco ascendente
-000050 9390 006a                 			sts	eicra,temp		;store direct to dat space
+00004b e8ec                      			ldi	zl,low(table*2)
+00004c e0f0                      			ldi zh,high(table*2)
+                                 			;configurar os ponteiros da ram
+00004d e0a0                      			ldi	xl,00 ; o x representa o contador!
+00004e e1b0                      			ldi	xh,0x10
+00004f e0c4                      			ldi yl,0x04 ;representa o display
+000050 e1d0                      			ldi yh,0x10
                                  
-000052 e093                      			ldi	temp,0b00000011	; activa os interupts 
-000053 bf99                      			out	eimsk,temp
-                                 
-000054 9478                      			sei					;activa os interrupts
-                                 			
-                                 			;timers--------------------------------
-                                 			
-                                 
-000055 e198                      			ldi temp,24  ;1ms mudar para 124
-000056 bf91                      			out ocr0,temp		; Ã© o valor que maximo que o contador conta
-                                 
-000057 e045                      			ldi	cnt_int,tempo1	;contador de 5ms
-                                 
-000058 2799                      			clr temp  ; se tiver as 0 esta parado
-000059 bf93                      			out tccr0,temp
-                                 
-00005a b707                      			in r16,TIMSK	;activa a interrupÃ§ao do tc0
-00005b 6002                      			ori r16,0b00000010
-00005c bf07                      			out timsk,r16
-00005d e09d                       			ldi		temp,0b00001101
-00005e bf93                      			out		tccr0,temp
-00005f 9468                      			bset		6
-                                 
-                                 			;---------------------------------------
-                                 
-                                 
-                                 
-000060 e8ec                      			ldi	zl,low(table*2)
-000061 e0f0                      			ldi zh,high(table*2)
-000062 e0b0                      			ldi xh,high(1) ;3segundos
-000063 e0a1                      			ldi xl,low(1)
-000064 e674                      			ldi	timer2,100
-                                 
-000065 e069                      			ldi	r22,9
-000066 ec00                      			ldi r16,0b11000000;	0 quer dizer input e 1 out		
-000067 ef1f                      			ldi	r17,0b11111111
-000068 efcf                      			ldi	r28,0b11111111
-000069 e7df                      			ldi	r29,0b01111111
-00006a bb01                      			out DDRD,r16		;define que parte Ã© entrada e saida 1 Ã© saida 	
-00006b bb14                      			out	DDRC,r17		
-00006c bb1a                      			out DDRA,r17
-00006d bb15                      			out	PORTC,r17  ;desliga os leds do display
-00006e bb02                      			out	PORTD,r16  ; 0 desliga os pull ups  Ã© preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
-00006f bbcb                      			out PORTA,r28
-000070 e0d0                      			ldi r29,0b00000000
-000071 e020                      			ldi	contador,0b00000000	
-000072 e674                      			ldi timer2,100
-000073 e684                      			ldi	timer3,100
-000074 9508                      			ret					; Indica o fim da funÃ§ao e vai pra a linha assegir de Call inic
+000051 e060                      			ldi	r22,0b00000000
+000052 ef00                      			ldi r16,0b11110000;	0 quer dizer input e 1 out		
+000053 ef1f                      			ldi	r17,0b11111111
+000054 ebcf                      			ldi	r28,0b10111111
+000055 e7df                      			ldi	r29,0b01111111
+000056 bb01                      			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
+000057 bb14                      			out	DDRC,r17		
+000058 bb1a                      			out DDRA,r17
+000059 bb15                      			out	PORTC,r17  ;desliga os leds do display
+00005a bb02                      			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
+00005b bbcb                      			out PORTA,r28
+00005c e044                      			ldi	meme,4
+00005d e029                      			ldi	contador,0b00001001	;nove
+00005e e0d9                      			ldi r29,9
+00005f 93dd                      			st	X+,r29
+000060 93dd                      			st	X+,r29
+000061 93dd                      			st	x+,r29
+000062 93dd                      			st	x+,r29
+000063 e0a0                      			ldi	xl,00
+000064 9508                      			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
                                  
                                  
                                  
                                  ;---------------------------Programa Principal--------------------------
                                  
-                                 
-                                 
                                  main:		
                                  
-000075 ef0f                      			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereÃ§o 0x10ff num sistema em que so temos 8bits. 
-000076 bf0d                      			out		spl,r16
-000077 e100                      			ldi		r16,0x10
-000078 bf0e                      			out		sph,r16
-000079 940e 004c                 			call	inic				; Ã‰ como se fosse uma funÃ§ao vai para a primeira linha do inic  						
+000065 ef0f                      			ldi		r16,0xff				;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+000066 bf0d                      			out		spl,r16
+000067 e100                      			ldi		r16,0x10
+000068 bf0e                      			out		sph,r16
+000069 940e 004b                 			call	inic					; É como se fosse uma funçao vai para a primeira linha do inic  						
                                  			
-                                 cicloini0:	
                                  
-00007b 940c 007b                 			jmp		cicloini0
+                                 clini:		;jmp		fim					;linha so de teste
+00006b e029                      			ldi		contador,9
+00006c 3040                      			cpi		meme,0					;verifica se ja se escolheu todos os numeros
+00006d f0e1                      			breq	FIM
                                  
-                                 numerosv2:			
-00007d 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
-00007e 9134                      			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
-00007f bb35                      			out		PORTC,display	;
-000080 e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
-000081 9508                      			ret	
-                                 int_int0:
-000082 94e8                      			bclr	6 ; limpa a flag
+                                 ciclo:
+00006e 940e 00a1                 			call	numerosv3
+                                 
+000070 f01e                      			brts	salto					;se a falg tiver limpa
+000071 9b80                      			sbis	PIND,0					;verifi o botao
+000072 940c 0086                 			jmp		STOP
+000074 9980                      salto:		sbic	PIND,0					;verifica se larguei o butao
+000075 94e8                      			clt								;limpa a flag
+                                 
+000076 3020                      			cpi		contador,0				;verificar se o contador chega a 0
+000077 f041                      			breq	clear
+                                 					
+000078 932d                      spot1:		st		x+,contador				;como meme = 4  quando sumar 4 vezes xl vai ficar 04 pois xl começa em 00
+000079 17a4                      			cp		xl,meme					;verificar quando é que escreveu na memoria de todos os ecras
+00007a f041                      			breq	clear2	
+00007b 940c 0078                 			jmp		spot1	
+                                 
+                                 
+                                 																			
+00007d 952a                      clo1:		dec		contador				;decresce
+00007e 940c 006e                 			jmp		ciclo
+                                 clear:
+000080 e02a                      			ldi		contador,10				;da reset ao contador
+000081 940c 007d                 			jmp		clo1
+                                 
+000083 e0a0                      clear2:		ldi		xl,0					;da reset ao ponteiro da ram
+000084 940c 007d                 			jmp		clo1
+                                 
+000086 954a                      STOP:		dec		meme					;decrementa meme para poder selecionar um numero
+000087 9468                      			set								;ativa a t falg
+000088 940c 006b                 			jmp		clini
                                  			
-000083 bbdb                      			out			PORTA,r29			
-000084 9518                      			reti
                                  
-                                 int_int1:
-                                 		
-                                 			;ldi temp,0
-                                 			;out tccr0,temp ; vamos querer o temporisador a trabalhar na mesma 
-                                 			; temos de fazer piscar usnado um delay 3 s
-                                 			;sbiw x decrementa uma word 
-000085 9468                      			bset		6 ; activa a flag
-000086 bb1b                      			out			PORTA,r17
-000087 9518                      			reti
+00008a 930f                      FIM:		push	r16
+00008b 931f                      			push	r17
+00008c 934f                      			push	meme
+00008d e0a0                      			ldi		xl,0
+00008e e044                      			ldi		meme,4
+00008f 910d                      			LD		r16,X+
+000090 954a                      check:		dec		meme
+000091 3040                      			cpi		meme,0
+000092 f101                      			breq	WIN
+000093 911d                      			LD		r17,X+
+000094 1701                      			cp		r16,r17
+000095 f3d1                      			breq	check
                                  
-                                 int_tc0:
-000088 954a                      			dec		cnt_int
-000089 f479                      			brne	f_int			; verifica se Ã© 0
-00008a e045                      			ldi		cnt_int,tempo1
+000096 914f                      			pop		meme
+000097 911f                      			pop		r17
+000098 910f                      			pop		r16
                                  
-00008b 940e 007d                 			call	numerosv2
+000099 e044                      			ldi		meme,4
+00009a 9b81                      loopF:		sbis	PIND,1
+00009b 940c 006b                 			jmp		clini
+00009d 940e 00a1                 			call	numerosv3		; falta escrever algo para o ecra de preferencia dora do loop e talvez por um delay antes de se poder fazer restart
+00009f 940c 009a                 			jmp		loopf				; usar o temporisador dedicado para o delay
                                  
-                                 			
-00008d f42e                      			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
-00008e 957a                      			dec     timer2
-00008f f4a1                      			brne	reset3
-                                 			;sbiw		X,1				; vai contar 3s 
-                                 			;brne	reset2
-000090 9478                      			sei
-000091 940c 007b                 			jmp		cicloini0
-                                 			;set					;activa a flag t escrever a qui o codigo
                                  
-000093 9523                      salto1:		inc		contador
                                  
-000094 302a                      			cpi		contador,10
-000095 f021                      			breq	reset
-000096 9478                      			sei
-000097 940c 007b                 			jmp		cicloini0
                                  
-                                 f_int:		
-000099 9518                      			reti
+                                 numerosv3:		; vai mostrar os numeros por ordem
+0000a1 930f                      			push	r16	
+0000a2 932f                      			push	contador
+0000a3 e100                      			ldi		r16,0b00010000
+0000a4 9488                      			clc		;limpa o carry		
+0000a5 f048                      nloop:		brcs	ndone
+0000a6 bb02                      			out		PORTD,r16
+0000a7 912d                      			LD		contador,X+
                                  
-00009a e020                      reset:		ldi		contador,0
-00009b 9518                      			reti
+0000a8 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
+0000a9 9124                      			lpm		contador,z		;vai ao local da memoria e carrega o o valor que la estiver
+0000aa bb25                      			out		PORTC,contador
+                                 			;call	delaym	;
+0000ab e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
                                  
-00009c e020                      reset2:		ldi		contador,0
-00009d e0b0                      			ldi		xh,high(6) ;3segundos por 600
-00009e e0a6                      			ldi		xl,low(6)
-00009f 940e 007d                 			call	numerosv2
-0000a1 9478                      			sei
-0000a2 940c 007b                 			jmp		cicloini0
+0000ac 0f00                      			lsl		r16
+0000ad 940c 00a5                 			jmp		nloop
                                  
-0000a4 932f                      reset3:		push contador
-0000a5 e02a                      			ldi	 contador,10		
-0000a6 940e 007d                 			call numerosv2
-0000a8 912f                      			pop	contador
-0000a9 958a                      			dec timer3
-0000aa f7c9                      			brne reset3
-0000ab 9478                      			sei
-0000ac 940c 007b                 			jmp cicloini0
-                                 			
-0000ae e684                      reset4:		ldi timer3,100
-0000af e674                      			ldi timer2,100
-0000b0 9478                      			sei
+0000af e0a0                      ndone:		ldi		xl,0
+0000b0 912f                      			pop		contador
+0000b1 910f                      			pop		r16
+0000b2 9508                      			ret	
+                                 
+                                 
+                                 
+0000b3 934f                      win:		push	r20
+0000b4 e050                      			ldi		r21,0b00000000
+0000b5 e044                      			ldi		meme,4
+0000b6 e0a0                      			ldi		xl,0		
+0000b7 935d                      spot2:		st		x+,r21					;esta parte serve para escrever o que mostrar no ecra mudando a ram
+0000b8 17a4                      			cp		xl,meme					
+0000b9 f7e9                      			brne	spot2	
+0000ba 940e 00a1                 			call	numerosv3
 
 
 RESOURCE USE INFORMATION
@@ -1515,41 +1500,41 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega128" register use summary:
-x  :   0 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   9 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  10 r17:   5 r18:   9 r19:   2 r20:   3 
-r21:   0 r22:   1 r23:   4 r24:   3 r25:  13 r26:   2 r27:   2 r28:   2 
-r29:   3 r30:   3 r31:   1 
-Registers used: 16 out of 35 (45.7%)
+r13:   0 r14:   0 r15:   0 r16:  16 r17:   8 r18:  12 r19:   0 r20:  13 
+r21:   2 r22:   1 r23:   0 r24:   0 r25:   0 r26:   8 r27:   1 r28:   3 
+r29:   7 r30:   3 r31:   1 
+Registers used: 14 out of 35 (40.0%)
 
 "ATmega128" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
-andi  :   0 asr   :   0 bclr  :   1 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+brcc  :   0 brcs  :   1 break :   0 breq  :   5 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   3 brpl  :   0 brsh  :   0 brtc  :   1 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   2 bst   :   0 call  :   4 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   1 cpse  :   0 dec   :   3 elpm  :   0 eor   :   0 fmul  :   0 
-fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   1 
-jmp   :  10 ld    :   0 ldd   :   0 ldi   :  31 lds   :   0 lpm   :   2 
-lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
-mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  18 
-pop   :   1 push  :   1 rcall :   0 ret   :   2 reti  :   4 rjmp  :   0 
-rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 
-sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
-seh   :   0 sei   :   6 sen   :   0 ser   :   0 ses   :   0 set   :   0 
-sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 
-sts   :   1 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
+brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   1 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   4 cbi   :   0 cbr   :   0 
+clc   :   1 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
+clt   :   1 clv   :   0 clz   :   0 com   :   0 cp    :   3 cpc   :   0 
+cpi   :   3 cpse  :   0 dec   :   3 elpm  :   0 eor   :   0 fmul  :   0 
+fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 
+jmp   :  11 ld    :   3 ldd   :   0 ldi   :  29 lds   :   0 lpm   :   2 
+lsl   :   1 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
+mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  10 
+pop   :   5 push  :   6 rcall :   0 ret   :   2 reti  :   0 rjmp  :   0 
+rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   1 
+sbis  :   2 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
+seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   1 
+sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   6 std   :   0 
+sts   :   0 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
-Instructions used: 23 out of 114 (20.2%)
+Instructions used: 24 out of 114 (21.1%)
 
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000166    222     12    234  131072   0.2%
+[.cseg] 0x000000 0x00017c    234     10    244  131072   0.2%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
-Assembly complete, 0 errors, 1 warnings
+Assembly complete, 0 errors, 0 warnings
