@@ -15,7 +15,7 @@
     <Name>2DD_melhorgrupo</Name>
     <RootNamespace>2DD_melhorgrupo</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\led_1.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\slot.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -96,6 +96,17 @@
     <Compile Include="led_1.asm">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="led_2.asm">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="slot.asm">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="led_3.s">
+      <SubType>Code</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Assembler.targets" />
 </Project>
