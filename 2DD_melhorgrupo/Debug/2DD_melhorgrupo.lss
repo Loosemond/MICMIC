@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm Tue Oct 03 22:29:22 2017
+AVRASM ver. 2.2.6  C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm Tue Oct 03 21:56:29 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
                                  
                                  ;
                                  
@@ -1280,27 +1280,27 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including fi
                                  
                                  .cseg ; reset de vector
                                  .org 0x0 ;defina a o sitio na memoria
-000000 940c 004b                 		jmp main ;começa o programa na func main 
+000000 940c 004b                 		jmp main ;comeÃ§a o programa na func main 
                                  .cseg
-                                 .org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
-                                 ;------------------------------Inicialização----------------------------
+                                 .org 0x46 ; estamos a deixar espaÃ§o para adicionarmos mais codigo antes da execuÃ§Ã£o do prog
+                                 ;------------------------------InicializaÃ§Ã£o----------------------------
 000046 ef0f                      inic:		ldi r16,0b11111111;		vai servir para configurar as saidas e as entradas, temos de escrever todas a portas do PORTA  de uma vez so dai temos 8.
-000047 bb0a                      			out DDRA,r16 ;			aqui é que se passa os valor em r16 para o PORTA ????
+000047 bb0a                      			out DDRA,r16 ;			aqui Ã© que se passa os valor em r16 para o PORTA ????
                                  
                                  			;ldi r16,0b11111111; Vai indicar que os led tao desligados pois 1 representa off
-000048 bb04                      			out DDRC,r16		;DDRC índica nos que é o PORTC
-000049 e010                      			ldi r17,0b00000000;
+000048 bb04                      			out DDRC,r16		;DDRC Ã­ndica nos que Ã© o PORTC
+000049 e010                      			ldi r17,0b00000000	;limpa o r17
                                  
-00004a 9508                      			ret						; Indica o fim da funçao e vai pra a linha assegir de Call inic
+00004a 9508                      			ret						; Indica o fim da funÃ§ao e vai pra a linha assegir de Call inic
                                  
                                  ;---------------------------Programa Principal--------------------------
                                  main:
-00004b ef0f                      		ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+00004b ef0f                      		ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereÃ§o 0x10ff num sistema em que so temos 8bits. 
 00004c bf0d                      		out		spl,r16
 00004d e100                      		ldi		r16,0x10
 00004e bf0e                      		out		sph,r16
                                  
-00004f 940e 0046                 		call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  
+00004f 940e 0046                 		call	inic				; Ã‰ como se fosse uma funÃ§ao vai para a primeira linha do inic  
                                  
                                  
                                  						
@@ -1309,7 +1309,7 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including fi
 000052 2f01                      		mov		r16,r17
                                  				
 000053 3011                      		cpi		r17,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.						;						
-000054 f071                      		breq	inver2
+000054 f071                      		breq	inver2				; Caso r17=0b00000001 salta para inver2
                                  		
 000055 3012                      		cpi		r17,0b00000010		
 000056 f061                      		breq	inver2
@@ -1320,7 +1320,7 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including fi
 000059 3018                      		cpi		r17,0b00001000		
 00005a f041                      		breq	inver2	
                                  				
-00005b 3110                      		cpi		r17,0b0010000		
+00005b 3110                      		cpi		r17,0b0010000		; Apaga os leds 	
 00005c f011                      		breq	clear
                                  												
 00005d 940c 0051                 		jmp		ciclo			
@@ -1335,9 +1335,9 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including fi
                                  
                                  Inver2:
                                  		
-000063 9502                      		swap	r16 ; troca os primeiros 4 bits pelos ultimos 	
+000063 9502                      		swap	r16 ; troca os primeiros 4 bits pelos ultimos 	antes: 0000 0001	depois: 0001 0000
                                  
-000064 fb04                      		bst		r16,4	;faz load do bit do r para T
+000064 fb04                      		bst		r16,4	;faz load do bit do r para T   isto vai inverter metade dos bits no proprio registo
 000065 f903                      		bld		r16,3	; escreve o bit de T em r18	
                                  
 000066 fb05                      		bst		r16,5	
@@ -1349,7 +1349,7 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including fi
                                  		
 00006a fb07                      		bst		r16,7	
 00006b f900                      		bld		r16,0
-                                 
+                                 						; antes de inverter 0001 000 depois: 0001 1000 pois inverte no proprio registo 
 00006c bb05                      		out		PORTC,r16
                                  
 00006d 940c 0051                 		jmp		ciclo
@@ -1357,35 +1357,9 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm(10): Including fi
                                  				
                                  
                                  
-                                 Inver:	
-00006f e020                      		ldi		r18,0b00000000
-000070 fb00                      		bst		r16,0	;faz load do bit do r para T
-000071 f927                      		bld		r18,7	; escreve o bit de T em r18	
-                                 				
-000072 fb01                      		bst		r16,1	
-000073 f926                      		bld		r18,6
-                                 
-000074 fb02                      		bst		r16,2	
-000075 f925                      		bld		r18,5
-                                 
-000076 fb03                      		bst		r16,3	
-000077 f924                      		bld		r18,4
-                                 
-000078 fb04                      		bst		r16,4	
-000079 f923                      		bld		r18,3
-                                 
-00007a fb05                      		bst		r16,5	
-00007b f922                      		bld		r18,2
-                                 
-00007c fb06                      		bst		r16,6	
-00007d f921                      		bld		r18,1
-                                 
-00007e fb07                      		bst		r16,7	
-00007f f920                      		bld		r18,0
-                                 
-000080 9508                      		ret
                                  
                                  
+                                 		
 
 
 RESOURCE USE INFORMATION
@@ -1405,26 +1379,26 @@ counted separately from r26..r31 here.
 "ATmega128" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  28 r17:   8 r18:   9 r19:   0 r20:   0 
+r13:   0 r14:   0 r15:   0 r16:  20 r17:   8 r18:   0 r19:   0 r20:   0 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 3 out of 35 (8.6%)
+Registers used: 2 out of 35 (5.7%)
 
 "ATmega128" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
-andi  :   0 asr   :   0 bclr  :   0 bld   :  12 brbc  :   0 brbs  :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   4 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   5 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :  12 call  :   1 cbi   :   0 cbr   :   0 
+brvs  :   0 bset  :   0 bst   :   4 call  :   1 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
 cpi   :   5 cpse  :   0 dec   :   0 elpm  :   0 eor   :   0 fmul  :   0 
 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 
-jmp   :   4 ld    :   0 ldd   :   0 ldi   :   6 lds   :   0 lpm   :   0 
+jmp   :   4 ld    :   0 ldd   :   0 ldi   :   5 lds   :   0 lpm   :   0 
 lsl   :   0 lsr   :   0 mov   :   1 movw  :   0 mul   :   0 muls  :   0 
 mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   6 
-pop   :   0 push  :   0 rcall :   0 ret   :   2 reti  :   0 rjmp  :   0 
+pop   :   0 push  :   0 rcall :   0 ret   :   1 reti  :   0 rjmp  :   0 
 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 
 sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
 seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 
@@ -1436,7 +1410,7 @@ Instructions used: 12 out of 114 (10.5%)
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000102    122      0    122  131072   0.1%
+[.cseg] 0x000000 0x0000de     86      0     86  131072   0.1%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 

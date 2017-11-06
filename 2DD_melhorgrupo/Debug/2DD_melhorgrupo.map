@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\main.asm Tue Oct 03 22:29:22 2017
+AVRASM ver. 2.2.6  C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\led_1.asm Tue Oct 03 21:56:29 2017
 
 
 EQU  SIGNATURE_000 0000001e
@@ -872,4 +872,3 @@ CSEG inic         00000046
 CSEG ciclo        00000051
 CSEG inver2       00000063
 CSEG clear        0000005f
-CSEG Inver        0000006f
