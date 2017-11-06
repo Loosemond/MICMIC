@@ -16,12 +16,13 @@
 .org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
 ;------------------------------Inicialização----------------------------
 inic:		ldi r16,0b11111111;		vai servir para configurar as saidas e as entradas, temos de escrever todas a portas do PORTA  de uma vez so dai temos 8.
-			out DDRA,r16 ;			aqui é que se passa os valor em r16 para o PORTA ????
+			ldi r17,0b00000000
+			out DDRA,r17 ;			aqui é que se passa os valor em r16 para o PORTA ????
 
 			;ldi r16,0b11111111; Vai indicar que os led tao desligados pois 1 representa off
 			out DDRC,r16		;DDRC índica nos que é o PORTC
-			ldi r17,0b00000000	;limpa o r17
-
+				
+			out	PORTC,r16
 			ret						; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 ;---------------------------Programa Principal--------------------------
@@ -36,28 +37,28 @@ main:
 
 						
 ciclo:
-		in		r17,PINA			;le PORTA para r16
+		in		r17,PINA			;le PORTA para r17
 		mov		r16,r17
 				
-		cpi		r17,0b00000001		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.						;						
+		cpi		r17,0b11111110		; Compara o que esta em r16 com o valor que colocamos  se for igual salta a linha.						;						
 		breq	inver2				; Caso r17=0b00000001 salta para inver2
 		
-		cpi		r17,0b00000010		
+		cpi		r17,0b11111101		
 		breq	inver2
 		
-		cpi		r17,0b00000100		
+		cpi		r17,0b11111011	
 		breq	inver2									
 			
-		cpi		r17,0b00001000		
+		cpi		r17,0b11110111		
 		breq	inver2	
 				
-		cpi		r17,0b0010000		; Apaga os leds 	
+		cpi		r17,0b11011111		; Apaga os leds 	
 		breq	clear
 												
 		jmp		ciclo			
 
 clear:	
-		ldi		r16,0b00000000 ;  apaga todos os leds serve para trocar o togle 
+		ldi		r16,0b11111111 ;  apaga todos os leds serve para trocar o togle 
 		out		PORTC,r16
 		
 		jmp		ciclo
@@ -66,7 +67,7 @@ clear:
 
 Inver2:
 		
-		swap	r16 ; troca os primeiros 4 bits pelos ultimos 	antes: 0000 0001	depois: 0001 0000
+		swap	r16 ; troca os primeiros 4 bits pelos ultimos; 	antes: 0000 0001	depois: 0001 0000
 
 		bst		r16,4	;faz load do bit do r para T   isto vai inverter metade dos bits no proprio registo
 		bld		r16,3	; escreve o bit de T em r18	
