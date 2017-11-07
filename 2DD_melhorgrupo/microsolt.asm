@@ -105,7 +105,7 @@ inic:
 			ori r16,0b00000010
 			out timsk,r16
  			
-			ldi		temp,0b00001111
+			ldi		temp,0b00001101
 			out		tccr0,temp
 
 			bset		6
@@ -169,11 +169,7 @@ int_int0:
 			reti
 
 int_int1:
-		
-			;ldi temp,0
-			;out tccr0,temp ; vamos querer o temporisador a trabalhar na mesma 
-			; temos de fazer piscar usnado um delay 3 s
-			;sbiw x decrementa uma word 
+					
 			bset		6 ; activa a flag
 			out			PORTA,r17
 			reti
@@ -225,4 +221,3 @@ reset4:		ldi timer3,delay2
 			ldi timer2,delay
 			reti
 
-			
