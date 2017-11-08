@@ -17,8 +17,8 @@
 ; Replace with your application code
 
 .include <m128def.inc>
-.def		timer2 = r23
-.def		timer3 = r24
+.def		timer2 = r24
+.def		timer3 = r23
 .def		cnt_int= r20
 
 .def		temp	= r25
@@ -87,7 +87,7 @@ inic:
 			ldi	temp,0b00000011	; activa os interupts 
 			out	eimsk,temp
 
-			sei					;activa os interrupts
+							;activa os interrupts
 			
 			;timers--------------------------------
 			
@@ -115,9 +115,9 @@ inic:
 			ldi zh,high(table*2)
 			;ldi xh,high(1) ;3segundos
 			;ldi xl,low(1)
-			ldi	xl,00 ; o x representa o contador!
+			ldi	xl,01 ; o x representa o contador!
 			ldi	xh,0x10
-			ldi	yl,0x20
+			ldi	yl,0x20	; o y representa o ecra
 			ldi	yh,0x10
 
 			ldi r19,0b11000000
@@ -127,25 +127,31 @@ inic:
 			ldi r19,0b01000000
 			st  y+,r19
 			ldi	yl,0x20 ;reset ao ponteiro y
+			ldi	r19,0
+
 			
+			st	x+,r19	;fica tudo a zero
+			st	x+,r19
+			st	x+,r19
+			ldi	xl,00 ; reset do ponteiro
 
 			ldi	r22,9
 			ldi r16,0b11000000;	0 quer dizer input e 1 out		
 			ldi	r17,0b11111111
-			ldi	r28,0b11111111
-			ldi	r29,0b01111111
+			;ldi	r28,0b11111111
+			ldi	r17,0b01111111
 			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
 			out	DDRC,r17		
 			out DDRA,r17
 			out	PORTC,r17  ;desliga os leds do displa
 			
 			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
-			out PORTA,r28
-			ldi r29,0b00000000
+			out PORTA,r17
+			ldi r17,0b00000000
 			ldi	contador,0b00000000	
 			ldi timer2,delay
 			ldi	timer3,delay
-
+			sei	
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 
@@ -166,24 +172,25 @@ cicloini0:
 			
 			jmp		cicloini0
 
-numerosv2:		
-			push	r24
+numerosv3:		
+			push	r16
 			push	r22
-			ldi		r22,0x20
-			ldi		yl,0x20
-			;vai mudar o display que mostramos :)	
-			cpi		yl,0x21
+			ldi		r22,0x20			
+tag2:		cpi		yl,0x23
 			breq	reset5
-tag1:		LD		r24,y+
-			OUT		PORTD,r24
-			out		PORTB,r24
+tag1:		LD		r16,y+
+			OUT		PORTD,r16
 			;------------
+			sub		yl,r22 ; assim so uso um apontador
+			LD		contador,y
 			add		zl,contador		;soma o numero que se vai querer colocar no display 			
 			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
 			out		PORTC,display	;
 			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+			add		yl,r22
+		
 			pop		r22
-			pop		r24
+			pop		r16
 			ret	
 int_int0:
 			bclr	6 ; limpa a flag
@@ -206,38 +213,63 @@ int_tc0:
 			brne	f_int			; verifica se é 0
 			ldi		cnt_int,tempo1
 
-			call	numerosv2			
+			call	numerosv3			
 			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
 			;dec     timer2
 			;brne	reset3
 			reti
 			;set					;activa a flag t escrever a qui o codigo
 
-salto1:		inc		contador
+salto1:		;inc		contador			
+			
+			;cpi		contador,10
+			;breq	reset
+incre:		push	r16
+			push	r17
+			ldi		r17,0x20
+			sub		yl,r17
+				
+			ld		r16,y
+			inc		r16
+			cpi		r16,10
+			breq	increreset
+			
+tag3:		st		y,r16
+			add		yl,r17
+			pop		r17
+			pop		r16
 
-			cpi		contador,10
-			breq	reset
 			reti
+
+increreset: ldi		r16,0
+			jmp		tag3
+
+			
+
 
 f_int:		
 			reti
 
+
+
 reset5:		
-			st		y,r22   ;rest do apontador
+			;st		y,r22   ;rest do apontador
+			ldi		yl,0x20
 			jmp		tag1
 
 reset:		ldi		contador,0
 			reti
+reset6:
 
 reset2:		ldi		contador,0
 			ldi		xh,high(6) ;3segundos por 600
 			ldi		xl,low(6)
-			call	numerosv2
+			call	numerosv3
 			reti
 
 reset3:		push contador
 			ldi	 contador,10		
-			call numerosv2
+			call numerosv3
 			pop	contador
 			dec timer3
 			brne reset3
