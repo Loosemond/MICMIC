@@ -137,17 +137,17 @@ inic:
 			ldi 	r19,0b01000000 ;01
 			st 	y+,r19
 			;--------local onde guardo o valor que apresento em cada digito
-			ldi	yl,0x20 ;reset ao ponteiro y
+			ldi	yl,0x20 			;reset ao ponteiro y
 			ldi	r19,0			
-			st	x+,r19	;fica tudo a zero
-			ldi	r19,10	;deste modo os displays ficam desligados
+			st	x+,r19				;fica tudo a zero
+			ldi	r19,10				;deste modo os displays ficam desligados
 			st	x+,r19
 			st	x+,r19			
 			;---------Memoria que indica se é para incrementar ou nao
 			ldi	xl,0x1d
-			ldi	r19,1 ; 1 representa que é para incrementar
+			ldi	r19,1 				; 1 representa que é para incrementar
 			st	x+,r19
-			ldi	r19,0	;deste modo so incrementa o 1o
+			ldi	r19,0				;deste modo so incrementa o 1o
 			st	x+,r19			
 			st	x,r19
 			;----------programa1(parar_dig)---------
@@ -155,50 +155,42 @@ inic:
 			ldi	r19,0x1d
 			st	x,r19
 			;---------------------------------------
-			ldi	xl,00 ; reset do ponteiro
+			ldi	xl,00 				; reset do ponteiro
 
 			;-----------------------------------------------------------------------
 			ldi	r22,9
-			ldi 	r16,0b11100000;	0 quer dizer input e 1 out		MUDAR PARA 11000000
+			ldi 	r16,0b11100000			;0 quer dizer input e 1 out		MUDAR PARA 11000000
 			ldi	r17,0b11111111
 			;ldi	r28,0b11111111
 			ldi	r17,0b01111111
-			out 	DDRD,r16		;define que parte é entrada e saida 1 é saida 	
+			out 	DDRD,r16			;define que parte é entrada e saida 1 é saida 	
 			out	DDRC,r17		
 			out 	DDRA,r17
-			out	PORTC,r17  ;desliga os leds do displa
+			out	PORTC,r17  			;desliga os leds do displa
 			
-			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
+			out	PORTD,r16  			; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
 			out 	PORTA,r17
 			ldi 	r17,0b00000000
 			ldi	contador,0b00000000	
 			ldi 	timer2,delay
 			ldi	timer3,delay
 			ldi 	r16,0b00000001
-			mov	r3,r16
-			
-		
+			mov	r3,r16					
 			sei	
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
-
-
 ;---------------------------Programa Principal--------------------------
-
-
-
 main:		
 
-			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+			ldi		r16,0xff		;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
 			out		spl,r16
 			ldi		r16,0x10
 			out		sph,r16
-			call		inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
+			call		inic			; É como se fosse uma funçao vai para a primeira linha do inic  						
 			
-cicloini0:	
-			
+cicloini0:				
 			jmp		cicloini0
-			;jmp		int_int0
+			
 numerosv3:		;--------display----------------------
 			push		r16
 			push		r22
@@ -208,18 +200,17 @@ numerosv3:		;--------display----------------------
 tag1:			LD		r16,y+
 			OUT		PORTD,r16
 			;----
-			sub		yl,r22 ; assim so uso um apontador
+			sub		yl,r22 			; assim so uso um apontador
 			LD		contador,y
 			add		zl,contador		;soma o numero que se vai querer colocar no display 			
 			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
-			out		PORTC,display	;
-			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+			out		PORTC,display		;
+			ldi		zl,low(table*2) 	; COLOCA O APONTADOR DA MEMORIA EM ZERO	
 			add		yl,r22		
 			pop		r22
 			pop		r16
 			ret	
-reset5:					
-			ldi		yl,0x20
+reset5:			ldi		yl,0x20
 			jmp		tag1			
 			;----------------------------------------
 int_int0:	
@@ -230,16 +221,10 @@ int_int0:
 			mov		flag,r16	
 			pop		r16		
 			reti
-
-int_int1:
-		
-			;ldi temp,0
-			
-			
-			push		r16
-			
+int_int1:											
+			push		r16			
 			mov		r16,flag
-			;sbr		r16,0b00000001		
+			sbr		r16,0b00000010 ;se 0b00000001 para de contar		
 			mov		flag,r16		;activa a flag1				
 			call		parar_dig		
 			pop		r16
@@ -253,9 +238,9 @@ parar_dig:		;---------------para um digito e mete outro a rolar---------
 			ldi		yl,m_p1			;m_p1 é onde guardo a posiçao da memoria que quero ler neste programa ou seja é uma variavel	
 			ld		r16,y			;guardo um valor no r17			
 			mov		yl,r16			;carrega o valor que estava guardado no m_p1 que era a posiçao de memoria guardada			
-			ldi		r16,0
+			ldi		r16,0			;desativa a contagem
 			st		y+,r16			;aqui vai escrever de modo a que o display actual pare de contar e o seguinte se ligue e que começe a contar
-			ldi		r16,1
+			ldi		r16,1			;activa a contagem
 			ldi		r17,0x20		;preciso de outro registo pois o cpse so compara se tiver 2 registos e como so da skip a uma linha nao dava pois preciso de fazer o ldi do r16 antes de fazer o ld
 			cpse		yl,r17			;Aqui verifico se ja parei o 3 digito se sim entao nao é preciso escrever mais nada alias se deixar escrever ele vai escrever por cima da memoria que indica qual display representa o digito1
 			st		y,r16			;indica que vai incrementar
@@ -271,18 +256,17 @@ parar_dig:		;---------------para um digito e mete outro a rolar---------
 int_tc0:	
 			dec		cnt_int
 			brne		f_int			; verifica se é 0
-			ldi		cnt_int,tempo1		;rest ao contador de 5ms
-			
+			ldi		cnt_int,tempo1		;rest ao contador de 5ms			
 			call		numerosv3		;mostra os numeros
 			push		r22
 			mov		r22,flag
 			sbrs		r22,0			;verifica se ja carregamos no butao para começar
 			call		modo1					 
 			pop		r22					
-			reti			
+f_int:			reti
+								
 Modo1:			
-			call		incre
-			
+			call		incre					
 			ret
 			;-------------incrementa---------------
 incre:			;pop		r22;VEM DE TRAS
@@ -291,7 +275,7 @@ incre:			;pop		r22;VEM DE TRAS
 			push		r18
 			ldi		r18,0			;serve para n ter de escrever um codigo especial para o brne
 			;---Verifica se é para incrementar			
-			ldi		r17,0x4	;vai servir para apontar para o sitio certo pois eu estou a apontar para 0x20 mas quero apontar para 0x1c
+			ldi		r17,0x4			;vai servir para apontar para o sitio certo pois eu estou a apontar para 0x20 mas quero apontar para 0x1c
 			sub		yl,r17			
 			ld		r16,y
 
@@ -299,14 +283,14 @@ incre:			;pop		r22;VEM DE TRAS
 			brne		skip0
 			;----------
 			;ldi		r17,4
-			ldi		r18,0x1c	;quero apontar  para 0x00	
+			ldi		r18,0x1c		;quero apontar  para 0x00	
 			sub		yl,r18			
 			ld		r16,y
 			inc		r16
 			cpi		r16,10
-			brge		increreset	; deste modo garanto que fasso reset ao numero mesmo que este seja maior que 10		
+			brge		increreset		; deste modo garanto que fasso reset ao numero mesmo que este seja maior que 10		
 tag3:			st		y,r16
-skip0:			add		r17,r18		; deste modo asseguro que acabo com o apontador em 0x20 pois se saltar so preciso de sumar 4 (r18 vai ser 0 logo isto da)			
+skip0:			add		r17,r18			; deste modo asseguro que acabo com o apontador em 0x20 pois se saltar so preciso de sumar 4 (r18 vai ser 0 logo isto da)			
 			add		yl,r17
 			pop		r18
 			pop		r17
@@ -314,37 +298,5 @@ skip0:			add		r17,r18		; deste modo asseguro que acabo com o apontador em 0x20 p
 			ret
 
 increreset: 		ldi		r16,0
-			jmp		tag3
-
-
-			
+			jmp		tag3			
 			;-------------------------------------------
-
-f_int:		
-			reti
-
-
-
-
-
-reset:			ldi		contador,0
-			reti
-reset6:
-
-reset2:			ldi		contador,0
-			ldi		xh,high(6) ;3segundos por 600
-			ldi		xl,low(6)
-			call		numerosv3
-			reti
-
-reset3:			push 		contador
-			ldi		 contador,10		
-			call 		numerosv3
-			pop		contador
-			dec 		timer3
-			brne 		reset3
-			reti
-			
-reset4:			ldi 		timer3,delay
-			ldi 		timer2,delay
-			reti
