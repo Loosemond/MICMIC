@@ -52,7 +52,10 @@
 .equ        	ap	= 0xff
 .equ		m_p1	= 0x1b
 .equ		delay	=200 ;mudar para 100
-
+.equ		c_segH	=0x0f ;representa a variavel que contem os segundos
+.equ		c_segL	=0x00
+.equ		c_digiL =0x0f	;vai guardar o numero de fazes que falata parar de rodar o digito !
+.equ		tempo_timer2=200
 .cseg ; reset de vector
 
 .org 0x0 ;defina a o sitio na memoria
@@ -84,7 +87,7 @@ inic:
 			ldi	temp,0b00001010	;fanlco ascendente
 			sts	eicra,temp		;store direct to dat space
 
-			ldi	temp,0b00000011	; activa os interupts 
+			ldi	temp,0b00000001	; activa os interupts 
 			out	eimsk,temp
 
 							;activa os interrupts
@@ -172,24 +175,25 @@ inic:
 			out 	PORTA,r17
 			ldi 	r17,0b00000000
 			ldi	contador,0b00000000	
-			ldi 	timer2,delay
-			ldi	timer3,delay
+			ldi 	timer2,tempo_timer2
+			;ldi	timer3,delay
 			ldi 	r16,0b00000001
 			mov	r3,r16					
 			sei	
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
-;---------------------------Programa Principal--------------------------
-main:		
+
+main:			;--------iniciaçao 1-----------
 
 			ldi		r16,0xff		;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
 			out		spl,r16
 			ldi		r16,0x10
 			out		sph,r16
 			call		inic			; É como se fosse uma funçao vai para a primeira linha do inic  						
-			
+  ;---------------------------Programa Principal--------------------------			
 cicloini0:				
 			jmp		cicloini0
+			;-------------------------------------
 			
 numerosv3:		;--------display----------------------
 			push		r16
@@ -212,21 +216,41 @@ tag1:			LD		r16,y+
 			ret	
 reset5:			ldi		yl,0x20
 			jmp		tag1			
-			;----------------------------------------
-int_int0:	
+			;--------------------
+int_int0:		;----------interupçao do butao 0------
 			push		r16
 			mov		r16,flag
 			
-			cbr		r16,0b00000001			
+			cbr		r16,0b00000001		;apaga o bit 0 e activa o modo1		
 			mov		flag,r16	
+			ldi		r16,0b00000010		; activa o interrupt do int_int1 e esativa a deste
+			out		eimsk,r16
 			pop		r16		
 			reti
-int_int1:											
-			push		r16			
+int_int1:		;------------interrupçao do butao 1----									
+			push		r16
+			;push		r26
+			;push		r27
 			mov		r16,flag
 			sbr		r16,0b00000010 ;se 0b00000001 para de contar		
 			mov		flag,r16		;activa a flag1				
-			call		parar_dig		
+			call		parar_dig		;remover talvez nao pq o primeiro para logo do os outros 2 é que demoram mais	
+			ldi		r16,0b00000000	;desativa todas as interrupts
+			out		eimsk,r16
+			;vvvvv vai guardar e dividir o tempo vvvvv   
+			ldi		xh,c_segH		;vai apontar para o endereço que contem a variavel que conta o tempo em segundos
+			ldi		xl,c_segL		;^^
+			ld		r16,x			;guarda o valor num registo
+			lsr		r16			;divide o tempo em dois
+			st		+x,r16			;vai incrementar o ponteiro e depois guarda o valor do r16
+			lsr		r16			;divide por 2 outra vez = a dividir por 4
+			st		+x,r16			;gaurada noutro espaço da memoria
+			ldi		xh,c_segH		;vou forçar o ponteiro nesta posiçao para mais a frente poder eterar 
+			ldi		xl,c_digiL		;assim tenho a certesa que nao paro mais de 2 vezes! 
+			st		x,2			;2 pois ja parei uma vez
+			ldi		xl,c_segL		;^^ foi por isso que nao fiz push/pop desta vez
+			;pop		r27
+			;pop		r26
 			pop		r16
 			reti
 
@@ -253,20 +277,86 @@ parar_dig:		;---------------para um digito e mete outro a rolar---------
 			pop		r16
 			ret
 			;-----------------------------------------------------------
-int_tc0:	
+int_tc0:		;---------timer0-------
 			dec		cnt_int
 			brne		f_int			; verifica se é 0
-			ldi		cnt_int,tempo1		;rest ao contador de 5ms			
+			ldi		cnt_int,tempo1		;rest ao contador de 5ms
 			call		numerosv3		;mostra os numeros
 			push		r22
 			mov		r22,flag
 			sbrs		r22,0			;verifica se ja carregamos no butao para começar
-			call		modo1					 
+			call		modo1			; deste modo posso adicionar mais codigo 
+			sbrs		r22,1			;verifica se carregei no stop
+			call		modo2					 ;verificar se carreguei no outro butao!
 			pop		r22					
 f_int:			reti
+
+segundo:		;-------codigo que conta segundos-----------------;0 incrementa 1 decrementa ->bit 2(a contar de 0) na flag(r3)
+			push		r16
+			push		r27 			;é o endereço x
+			push		r26			;x
+			
+			ldi		xh,c_segH		;vai apontar para o endereço que contem a variavel que conta o tempo em segundos
+			ldi		xl,c_segL
+			ld		r16,x			;guarda o valor num registo
+			mov		r26,flag		; r26 agora contem as flags tou a reutilizar registos pois assim poupo ciclos(devido ao push e pop) e ..registos
+			sbrs		r26,2			;vai verificar se é para incrementar ou nao	caso o bit seja 0 ele vai incrementar e saltar o passo de decrementar mais a frente
+			inc		r16			;incrementa pois assim conto os segundos que passaram
+			sbrc		r16,2			;caso o bit teja a 1 quer dizer que é para decrementar e que seu skip ao inc
+			dec		r16
+			;breq		fim_contagem		;caso o contador va a 0 (verificar se isto ta correto) pois se der 0 ele vai saltar. e nunca vai ser 0 se incrementar
+			ldi		r26,c_segL		;tenho de voltar a carregar pois escrevi a falg por cima
+			st		x,r16			;finalmente grava o valor 
+			
+			pop		r26
+			pop		r27
+			pop		r16
+			ret
 								
-Modo1:			
-			call		incre					
+Modo1:			dec		timer2			;este vai contar 1s
+			breq		increm			;a cada 1 segundo vai saltar para a funçao segundo
+			call		incre			;vai rolar os numeros				
+			ret
+increm:			;vai contar o tempo que o utilizador demorou a contar
+			push		r16
+			;---quero ter a certesa que vou incremnetar			
+			mov		r16,flag			
+			cbr		r16,0b00000100	; india que é para incrementar		
+			mov		flag,r16
+			ldi		timer2,tempo_timer2
+			pop		r16							
+			call		segundo			
+			ret					;tem de tar aqui pois venho do modo1
+			   
+Modo2:			push		r16
+			
+			ld		r16,x
+			dec		r16
+			breq		zero			;caso r16(tempo) chege a 0 vai parar o digito
+			st		x,r16			;tenho de guardar senao isto nunca parava
+			pop		r17
+			pop		r16
+			ret
+			
+zero:			
+			push		r17
+			inc		xl			;vai buscar o valor do tempo seguinte
+			
+			call		parar_dig		;para de rolar o digito actual
+			mov		r17,xl
+			ldi		xl,c_digiL		;vai ver quantos faltam
+			ld		r16,x
+			dec		r16
+			breq		modo2_fim
+			st		x,r16
+			ldi		xl,r17			;volta a apontar para o mesmo sitio de antes
+			pop		r17
+			pop		r16			
+			ret
+modo2_fim:		;------aqui vaiter o codigo que vai fazer parar tudo
+			;colocar a flag de forma a que pare tudo !<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!
+			pop		r17
+			pop		r16
 			ret
 			;-------------incrementa---------------
 incre:			;pop		r22;VEM DE TRAS
