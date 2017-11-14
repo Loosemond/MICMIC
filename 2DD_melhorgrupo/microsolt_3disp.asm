@@ -232,28 +232,35 @@ int_int1:		;------------interrupçao do butao 1----
 			;push		r26
 			;push		r27
 			mov		r16,flag
-			sbr		r16,0b00000010 ;se 0b00000001 para de contar		
+			sbr		r16,0b00000001 ;se 0b00000001 para de contar
+			sbr		r16,0b00000010; assim para de ir para o modo 1
 			mov		flag,r16		;activa a flag1				
 			call		parar_dig		;remover talvez nao pq o primeiro para logo do os outros 2 é que demoram mais	
 			ldi		r16,0b00000000	;desativa todas as interrupts
 			out		eimsk,r16
-			;vvvvv vai guardar e dividir o tempo vvvvv   
+			;vvvvv vai guardar e dividir o tempo vvvvv  
+			;mov		timer2
 			ldi		xh,c_segH		;vai apontar para o endereço que contem a variavel que conta o tempo em segundos
 			ldi		xl,c_segL		;^^
-			ld		r16,x			;guarda o valor num registo
-			lsr		r16			;divide o tempo em dois
-			st		+x,r16			;vai incrementar o ponteiro e depois guarda o valor do r16
+			ld		r16,x+			;guarda o valor num registo
+			cpi		r16,8
+			brlo		mt_rapido			;caso calhe o tempo ser menor que 8 (tentar 4) ele vai forçar 8
+volta:			lsr		r16			;divide o tempo em dois
+			st		x+,r16			;vai incrementar o ponteiro e depois guarda o valor do r16
 			lsr		r16			;divide por 2 outra vez = a dividir por 4
-			st		+x,r16			;gaurada noutro espaço da memoria
+			st		x,r16			;gaurada noutro espaço da memoria
 			ldi		xh,c_segH		;vou forçar o ponteiro nesta posiçao para mais a frente poder eterar 
 			ldi		xl,c_digiL		;assim tenho a certesa que nao paro mais de 2 vezes! 
-			st		x,2			;2 pois ja parei uma vez
+			ldi		r16,2
+			st		x,r16			;2 pois ja parei uma vez
 			ldi		xl,c_segL		;^^ foi por isso que nao fiz push/pop desta vez
+			inc		xl			;pois so quero os valores que sao divididos nao o inicial
 			;pop		r27
 			;pop		r26
 			pop		r16
 			reti
-
+mt_rapido:		ldi		r16,8
+			jmp		volta
 parar_dig:		;---------------para um digito e mete outro a rolar---------
 			push		r16
 			push		r17
@@ -286,7 +293,7 @@ int_tc0:		;---------timer0-------
 			mov		r22,flag
 			sbrs		r22,0			;verifica se ja carregamos no butao para começar
 			call		modo1			; deste modo posso adicionar mais codigo 
-			sbrs		r22,1			;verifica se carregei no stop
+			sbrc		r22,1			;verifica se carregei no stop
 			call		modo2					 ;verificar se carreguei no outro butao!
 			pop		r22					
 f_int:			reti
@@ -302,7 +309,7 @@ segundo:		;-------codigo que conta segundos-----------------;0 incrementa 1 decr
 			mov		r26,flag		; r26 agora contem as flags tou a reutilizar registos pois assim poupo ciclos(devido ao push e pop) e ..registos
 			sbrs		r26,2			;vai verificar se é para incrementar ou nao	caso o bit seja 0 ele vai incrementar e saltar o passo de decrementar mais a frente
 			inc		r16			;incrementa pois assim conto os segundos que passaram
-			sbrc		r16,2			;caso o bit teja a 1 quer dizer que é para decrementar e que seu skip ao inc
+			sbrc		r26,2			;caso o bit teja a 1 quer dizer que é para decrementar e que seu skip ao inc
 			dec		r16
 			;breq		fim_contagem		;caso o contador va a 0 (verificar se isto ta correto) pois se der 0 ele vai saltar. e nunca vai ser 0 se incrementar
 			ldi		r26,c_segL		;tenho de voltar a carregar pois escrevi a falg por cima
@@ -328,34 +335,40 @@ increm:			;vai contar o tempo que o utilizador demorou a contar
 			call		segundo			
 			ret					;tem de tar aqui pois venho do modo1
 			   
-Modo2:			push		r16
+Modo2:			call		incre
+			dec		timer2			;este vai contar 1s
+			breq		decrem			;a cada 1 segundo vai saltar para a funçao segundo
 			
+			ret
+decrem:			ldi		timer2,tempo_timer2;reset ao timer
+			push		r16			
 			ld		r16,x
 			dec		r16
-			breq		zero			;caso r16(tempo) chege a 0 vai parar o digito
+			breq		contador_digitos			;caso r16(tempo) chege a 0 vai parar o digito
 			st		x,r16			;tenho de guardar senao isto nunca parava
-			pop		r17
+			;pop		r17
 			pop		r16
 			ret
+contador_digitos:	;vai saber quantos digitos faltam parar		
 			
-zero:			
-			push		r17
 			inc		xl			;vai buscar o valor do tempo seguinte
-			
-			call		parar_dig		;para de rolar o digito actual
-			mov		r17,xl
+			push		xl
+			call		parar_dig		;para de rolar o digito actual			
 			ldi		xl,c_digiL		;vai ver quantos faltam
 			ld		r16,x
 			dec		r16
 			breq		modo2_fim
-			st		x,r16
-			ldi		xl,r17			;volta a apontar para o mesmo sitio de antes
-			pop		r17
-			pop		r16			
+			st		x+,r16			
+			pop		xl
+			pop		r16
+			
 			ret
-modo2_fim:		;------aqui vaiter o codigo que vai fazer parar tudo
-			;colocar a flag de forma a que pare tudo !<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!
-			pop		r17
+modo2_fim:		;------aqui vaiter o codigo que vai fazer parar tudo			
+			mov		r16,flag			
+			sbr		r16,0b00000001		;apaga o bit 0 e activa o modo1	
+			cbr		r16,0b00000010
+			mov		flag,r16						 ;colocar a flag de forma a que pare tudo !<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!
+			pop		xl
 			pop		r16
 			ret
 			;-------------incrementa---------------
