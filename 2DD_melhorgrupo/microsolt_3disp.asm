@@ -17,6 +17,7 @@
 ; Replace with your application code
 
 .include <m128def.inc>
+.def		leds	=r1
 .def		timer2 = r24
 .def		timer3 = r23
 .def		cnt_int= r20
@@ -27,7 +28,7 @@
 
 .def		contador = r18	; muda o nome
 
-.equ		tempo1 =5;5
+.equ		tempo1 =3;5
 
 .equ		zero	= 0xC0
 
@@ -56,6 +57,7 @@
 .equ		c_segL	=0x00
 .equ		c_digiL =0x0f	;vai guardar o numero de fazes que falata parar de rodar o digito !
 .equ		tempo_timer2=200
+
 .cseg ; reset de vector
 
 .org 0x0 ;defina a o sitio na memoria
@@ -95,7 +97,7 @@ inic:
 			;timers--------------------------------
 			
 
-			ldi 	temp,124  ;1ms mudar para 124
+			ldi 	temp,208  ;1ms mudar para 124  se repetir 208 3 vezes tb da 5ms
 			out 	ocr0,temp		; é o valor que maximo que o contador conta
 
 			ldi	cnt_int,tempo1	;contador de 5ms
@@ -110,20 +112,9 @@ inic:
 			
  			ldi	temp,0b00001101
 			out	tccr0,temp
-			;bset		6
-			;timer2
-			;ldi	temp,0x09
-			;out	ocrbl,temp
-			;ldi	temp,0x3D
-			;out	ocrbh,temp
-			;clr 	temp  ;
-			;out 	tccrnb,temp
 			
-			;in 	r16,TIMSK	;activa a interrupçao do tc0
-			;ori 	r16,0b00000010
-			;out 	timsk,r16
 			;------RAM--------------------------------------------
-			ldi	zl,low(table*2)
+reset_ram:		ldi	zl,low(table*2)
 			ldi 	zh,high(table*2)
 			;ldi xh,high(1) ;3segundos
 			;ldi xl,low(1)
@@ -165,7 +156,7 @@ inic:
 			ldi 	r16,0b11100000			;0 quer dizer input e 1 out		MUDAR PARA 11000000
 			ldi	r17,0b11111111
 			;ldi	r28,0b11111111
-			ldi	r17,0b01111111
+			ldi	r17,0b11111111
 			out 	DDRD,r16			;define que parte é entrada e saida 1 é saida 	
 			out	DDRC,r17		
 			out 	DDRA,r17
@@ -179,7 +170,7 @@ inic:
 			;ldi	timer3,delay
 			ldi 	r16,0b00000001
 			mov	r3,r16					
-			sei	
+				
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
 
 
@@ -189,9 +180,13 @@ main:			;--------iniciaçao 1-----------
 			out		spl,r16
 			ldi		r16,0x10
 			out		sph,r16
-			call		inic			; É como se fosse uma funçao vai para a primeira linha do inic  						
+			call		inic			; É como se fosse uma funçao vai para a primeira linha do inic  
+			sei			
   ;---------------------------Programa Principal--------------------------			
-cicloini0:				
+cicloini0:		
+			mov 		r21,flag
+			cpi		r21,0b10000000
+			breq		main
 			jmp		cicloini0
 			;-------------------------------------
 			
@@ -217,10 +212,15 @@ tag1:			LD		r16,y+
 reset5:			ldi		yl,0x20
 			jmp		tag1			
 			;--------------------
+fimmmmmmmmmmmmmm:	ldi		r16,0b10000000
+			mov		flag,r16 
+			pop		r16		
+			reti
 int_int0:		;----------interupçao do butao 0------
 			push		r16
 			mov		r16,flag
-			
+			cpi		r16,0b01000000
+			breq		fimmmmmmmmmmmmmm
 			cbr		r16,0b00000001		;apaga o bit 0 e activa o modo1		
 			mov		flag,r16	
 			ldi		r16,0b00000010		; activa o interrupt do int_int1 e esativa a deste
@@ -231,6 +231,8 @@ int_int1:		;------------interrupçao do butao 1----
 			push		r16
 			;push		r26
 			;push		r27
+			ldi		r16,0b00000000		; desativa as interrupts
+			out		eimsk,r16
 			mov		r16,flag
 			sbr		r16,0b00000001 ;se 0b00000001 para de contar
 			sbr		r16,0b00000010; assim para de ir para o modo 1
@@ -243,7 +245,7 @@ int_int1:		;------------interrupçao do butao 1----
 			ldi		xh,c_segH		;vai apontar para o endereço que contem a variavel que conta o tempo em segundos
 			ldi		xl,c_segL		;^^
 			ld		r16,x+			;guarda o valor num registo
-			cpi		r16,8
+			cpi		r16,2			;aqui defino o tempo minimo <----t_min
 			brlo		mt_rapido			;caso calhe o tempo ser menor que 8 (tentar 4) ele vai forçar 8
 volta:			lsr		r16			;divide o tempo em dois
 			st		x+,r16			;vai incrementar o ponteiro e depois guarda o valor do r16
@@ -255,6 +257,9 @@ volta:			lsr		r16			;divide o tempo em dois
 			st		x,r16			;2 pois ja parei uma vez
 			ldi		xl,c_segL		;^^ foi por isso que nao fiz push/pop desta vez
 			inc		xl			;pois so quero os valores que sao divididos nao o inicial
+			ldi		r16,0b11111110			;serve para ligar os leds
+			mov		leds,r16
+			out		porta,r16
 			;pop		r27
 			;pop		r26
 			pop		r16
@@ -353,23 +358,32 @@ contador_digitos:	;vai saber quantos digitos faltam parar
 			
 			inc		xl			;vai buscar o valor do tempo seguinte
 			push		xl
+			mov		r16,leds		;leds
+			lsl		r16			;leds
+			out		porta,r16
+			mov		leds,r16
 			call		parar_dig		;para de rolar o digito actual			
 			ldi		xl,c_digiL		;vai ver quantos faltam
 			ld		r16,x
 			dec		r16
 			breq		modo2_fim
-			st		x+,r16			
+			st		x+,r16				
 			pop		xl
 			pop		r16
 			
 			ret
 modo2_fim:		;------aqui vaiter o codigo que vai fazer parar tudo			
 			mov		r16,flag			
-			sbr		r16,0b00000001		;apaga o bit 0 e activa o modo1	
-			cbr		r16,0b00000010
-			mov		flag,r16						 ;colocar a flag de forma a que pare tudo !<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!!!
+			;sbr		r16,0b00000001		;desativa o modo 1
+			;cbr		r16,0b00000010
+			ldi		r16,0b01000000
+			mov		flag,r16			
+			
+			ldi		r16,0b00000001		; activa a interrupt do butao 0 
+			out		eimsk,r16
 			pop		xl
 			pop		r16
+			;call		reset_ram
 			ret
 			;-------------incrementa---------------
 incre:			;pop		r22;VEM DE TRAS
