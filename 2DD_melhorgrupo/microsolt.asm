@@ -27,7 +27,7 @@
 
 .def		contador = r18	; muda o nome
 
-.equ		tempo1 =5
+.equ		tempo1 =200
 
 .equ		zero	= 0xC0
 
@@ -52,7 +52,7 @@
 .equ        ap	= 0xff
 
 .equ		delay	=200 ;mudar para 100
-.equ		delay2  =1
+.equ		delay2  =200
 
 .cseg ; reset de vector
 
@@ -93,7 +93,7 @@ inic:
 			;timers--------------------------------
 			
 
-			ldi temp,24  ;1ms mudar para 124
+			ldi temp,124  ;1ms mudar para 124
 			out ocr0,temp		; é o valor que maximo que o contador conta
 
 			ldi	cnt_int,tempo1	;contador de 5ms
@@ -133,7 +133,7 @@ inic:
 			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
 			out PORTA,r28
 			ldi r29,0b00000000
-			ldi	contador,0b00000000	
+			ldi	contador,10	
 			ldi timer2,delay
 			ldi	timer3,delay2
 			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
@@ -183,24 +183,26 @@ int_tc0:
 
 			
 			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
-			dec     timer2
-			brne	reset3
+			brts	pisca
+			;dec     timer2
+			;brne	reset3
 			;sbiw		X,1				; vai contar 3s 
 			;brne	reset2
 
 			reti
 
 
-salto1:		inc		contador
-
-			cpi		contador,10
-			breq	reset
+salto1:		
+			ldi	r22,9
+			cp	contador,r22			
+			brsh	reset
+			inc		contador
 			reti
 
 f_int:		
 			reti
 
-reset:		ldi		contador,0
+reset:		ldi	contador,0
 			reti
 
 reset2:		ldi		contador,0
@@ -208,16 +210,25 @@ reset2:		ldi		contador,0
 			ldi		xl,low(600)
 			call	numerosv2
 			reti
-
-reset3:		push contador
-			ldi	 contador,10		
-			call numerosv2
-			pop	contador
-			dec timer3
-			brne reset3
+pisca:			cpi	timer2,0
+			breq	pisca2
+			dec	timer2
+			ldi	timer3,delay2
 			reti
 			
-reset4:		ldi timer3,delay2
-			ldi timer2,delay
+pisca2:			ldi	r22,delay2
+			cp	timer3,r22		;se tiver ao max
+			breq	gravar
+			ldi	contador,10
+ali:			dec	timer3			
+			breq	reset5000 ;check
+			reti
+			
+gravar:			mov 	r21,contador
+			jmp	ali
+
+reset5000:		ldi	timer2,delay
+			mov	contador,r21
 			reti
 
+			
