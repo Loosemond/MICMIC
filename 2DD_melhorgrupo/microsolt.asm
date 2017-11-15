@@ -27,7 +27,7 @@
 
 .def		contador = r18	; muda o nome
 
-.equ		tempo1 =200
+.equ		tempo1 =5
 
 .equ		zero	= 0xC0
 
@@ -165,13 +165,13 @@ numerosv2:
 int_int0:
 			bclr	6 ; limpa a flag
 			
-			out			PORTA,r29			
+			;out			PORTA,r29			
 			reti
 
 int_int1:
 					
 			bset		6 ; activa a flag
-			out			PORTA,r17
+			;out			PORTA,r17
 			reti
 
 int_tc0:
