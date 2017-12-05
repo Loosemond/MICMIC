@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.6  C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm Tue Nov 07 00:07:22 2017
+AVRASM ver. 2.2.6  C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm Mon Nov 13 18:53:21 2017
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
-C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
+C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(19): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.0.106\avrasm\inc\m128def.inc'
                                  
                                  ;
                                  
@@ -1286,17 +1286,17 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(19): I
                                  #endif  /* _M128DEF_INC_ */
                                  
                                  ; ***** END OF FILE ******************************************************
-                                 .def		timer2 = r23
-                                 .def		timer3 = r24
+                                 .def		timer2 = r24
+                                 .def		timer3 = r23
                                  .def		cnt_int= r20
-                                 
+                                 .def		flag=r3
                                  .def		temp	= r25
                                  
                                  .def		display	= r19
                                  
                                  .def		contador = r18	; muda o nome
                                  
-                                 .equ		tempo1 =5
+                                 .equ		tempo1 =5;5
                                  
                                  .equ		zero	= 0xC0
                                  
@@ -1318,22 +1318,22 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(19): I
                                  
                                  .equ		nove	= 0x90
                                  
-                                 .equ        ap	= 0xff
-                                 
+                                 .equ        	ap	= 0xff
+                                 .equ		m_p1	= 0x1b
                                  .equ		delay	=200 ;mudar para 100
                                  
                                  .cseg ; reset de vector
                                  
                                  .org 0x0 ;defina a o sitio na memoria
                                  
-000000 940c 007d                 		jmp main ;começa o programa na func main 
+000000 940c 008a                 		jmp main ;começa o programa na func main 
                                  .org	0x02
-000002 940c 0093                 		jmp int_int0
+000002 940c 00a6                 		jmp int_int0
                                  .org	0x04
-000004 940c 0096                 		jmp	int_int1
+000004 940c 00ac                 		jmp	int_int1
                                  
                                  .org	0x1E
-00001e 940c 0099                 		jmp int_tc0
+00001e 940c 00c9                 		jmp int_tc0
                                  .cseg
                                  
                                  .org 0x46 ; estamos a deixar espaço para adicionarmos mais codigo antes da execução do prog
@@ -1345,7 +1345,7 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(19): I
 000048 9299
 000049 f882
 00004a 9080
-C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(74): warning: .cseg .db misalignment - padding zero byte
+C:\Users\João Ribeiro\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(74): warning: .cseg .db misalignment - padding zero byte
 00004b 00ff                      .db	zero,um,dois,tres,quatro,cinco,seis,sete,oito,nove,ap
                                  
                                  ;------------------------------Inicialização----------------------------
@@ -1362,165 +1362,218 @@ C:\Users\Casa\Documents\GitHub\MICMIC\2DD_melhorgrupo\microsolt_3disp.asm(74): w
 000052 e093                      			ldi	temp,0b00000011	; activa os interupts 
 000053 bf99                      			out	eimsk,temp
                                  
-000054 9478                      			sei					;activa os interrupts
+                                 							;activa os interrupts
                                  			
                                  			;timers--------------------------------
                                  			
                                  
-000055 e198                      			ldi temp,24  ;1ms mudar para 124
-000056 bf91                      			out ocr0,temp		; é o valor que maximo que o contador conta
+000054 e79c                      			ldi 	temp,124  ;1ms mudar para 124
+000055 bf91                      			out 	ocr0,temp		; é o valor que maximo que o contador conta
                                  
-000057 e045                      			ldi	cnt_int,tempo1	;contador de 5ms
+000056 e045                      			ldi	cnt_int,tempo1	;contador de 5ms
                                  
-000058 2799                      			clr temp  ; se tiver as 0 esta parado
-000059 bf93                      			out tccr0,temp
+                                 			;clr 	temp  ; se tiver as 0 esta parado
+                                 			;out 	tccr0,temp
                                  
-00005a b707                      			in r16,TIMSK	;activa a interrupçao do tc0
-00005b 6002                      			ori r16,0b00000010
-00005c bf07                      			out timsk,r16
-00005d e09d                       			ldi		temp,0b00001101
-00005e bf93                      			out		tccr0,temp
-00005f 9468                      			bset		6
-                                 
-                                 			;---------------------------------------
-                                 
-                                 
-                                 
-000060 e8ec                      			ldi	zl,low(table*2)
-000061 e0f0                      			ldi zh,high(table*2)
+000057 b707                      			in 	r16,TIMSK	;activa a interrupçao do tc0
+000058 6002                      			ori 	r16,0b00000010
+000059 bf07                      			out 	timsk,r16
+                                 			
+                                 			
+00005a e09d                       			ldi	temp,0b00001101
+00005b bf93                      			out	tccr0,temp
+                                 			;bset		6
+                                 			;timer2
+                                 			;ldi	temp,0x09
+                                 			;out	ocrbl,temp
+                                 			;ldi	temp,0x3D
+                                 			;out	ocrbh,temp
+                                 			;clr 	temp  ;
+                                 			;out 	tccrnb,temp
+                                 			
+                                 			;in 	r16,TIMSK	;activa a interrupçao do tc0
+                                 			;ori 	r16,0b00000010
+                                 			;out 	timsk,r16
+                                 			;------RAM--------------------------------------------
+00005c e8ec                      			ldi	zl,low(table*2)
+00005d e0f0                      			ldi 	zh,high(table*2)
                                  			;ldi xh,high(1) ;3segundos
                                  			;ldi xl,low(1)
-000062 e0a0                      			ldi	xl,00 ; o x representa o contador!
-000063 e1b0                      			ldi	xh,0x10
-000064 e2c0                      			ldi	yl,0x20
-000065 e1d0                      			ldi	yh,0x10
+00005e e0a1                      			ldi	xl,01 ; o x representa o contador!
+00005f e1b0                      			ldi	xh,0x10
+000060 e2c0                      			ldi	yl,0x20	; o y representa o ecra
+000061 e1d0                      			ldi	yh,0x10
                                  
-000066 ec30                      			ldi r19,0b11000000
-000067 9339                      			st  y+,r19  ; vai guardar qual display tou a usar serve para ter a ordem certa.
-000068 e830                      			ldi r19,0b10000000
-000069 9339                      			st  y+,r19
-00006a e430                      			ldi r19,0b01000000
-00006b 9339                      			st  y+,r19
-00006c e2c0                      			ldi	yl,0x20 ;reset ao ponteiro y
+000062 ec30                      			ldi 	r19,0b11000000  ;mudar para  11
+000063 9339                      			st  	y+,r19  ; vai guardar qual display tou a usar serve para ter a ordem certa.
+000064 e830                      			ldi 	r19,0b10000000;10
+                                 			;ldi	r19,0
+000065 9339                      			st  	y+,r19
+000066 e430                      			ldi 	r19,0b01000000 ;01
+000067 9339                      			st 	y+,r19
+                                 			;--------local onde guardo o valor que apresento em cada digito
+000068 e2c0                      			ldi	yl,0x20 			;reset ao ponteiro y
+000069 e030                      			ldi	r19,0			
+00006a 933d                      			st	x+,r19				;fica tudo a zero
+00006b e03a                      			ldi	r19,10				;deste modo os displays ficam desligados
+00006c 933d                      			st	x+,r19
+00006d 933d                      			st	x+,r19			
+                                 			;---------Memoria que indica se é para incrementar ou nao
+00006e e1ad                      			ldi	xl,0x1d
+00006f e031                      			ldi	r19,1 				; 1 representa que é para incrementar
+000070 933d                      			st	x+,r19
+000071 e030                      			ldi	r19,0				;deste modo so incrementa o 1o
+000072 933d                      			st	x+,r19			
+000073 933c                      			st	x,r19
+                                 			;----------programa1(parar_dig)---------
+000074 e1ab                      			ldi	xl,m_p1
+000075 e13d                      			ldi	r19,0x1d
+000076 933c                      			st	x,r19
+                                 			;---------------------------------------
+000077 e0a0                      			ldi	xl,00 				; reset do ponteiro
+                                 
+                                 			;-----------------------------------------------------------------------
+000078 e069                      			ldi	r22,9
+000079 ee00                      			ldi 	r16,0b11100000			;0 quer dizer input e 1 out		MUDAR PARA 11000000
+00007a ef1f                      			ldi	r17,0b11111111
+                                 			;ldi	r28,0b11111111
+00007b e71f                      			ldi	r17,0b01111111
+00007c bb01                      			out 	DDRD,r16			;define que parte é entrada e saida 1 é saida 	
+00007d bb14                      			out	DDRC,r17		
+00007e bb1a                      			out 	DDRA,r17
+00007f bb15                      			out	PORTC,r17  			;desliga os leds do displa
                                  			
-                                 
-00006d e069                      			ldi	r22,9
-00006e ec00                      			ldi r16,0b11000000;	0 quer dizer input e 1 out		
-00006f ef1f                      			ldi	r17,0b11111111
-000070 efcf                      			ldi	r28,0b11111111
-000071 e7df                      			ldi	r29,0b01111111
-000072 bb01                      			out DDRD,r16		;define que parte é entrada e saida 1 é saida 	
-000073 bb14                      			out	DDRC,r17		
-000074 bb1a                      			out DDRA,r17
-000075 bb15                      			out	PORTC,r17  ;desliga os leds do displa
-                                 			
-000076 bb02                      			out	PORTD,r16  ; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
-000077 bbcb                      			out PORTA,r28
-000078 e0d0                      			ldi r29,0b00000000
-000079 e020                      			ldi	contador,0b00000000	
-00007a ec78                      			ldi timer2,delay
-00007b ec88                      			ldi	timer3,delay
-                                 
-00007c 9508                      			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
-                                 
-                                 
+000080 bb02                      			out	PORTD,r16  			; 0 desliga os pull ups  é preciso defenir os 2 ultimos bits como 11 para acender o display da esquerda
+000081 bb1b                      			out 	PORTA,r17
+000082 e010                      			ldi 	r17,0b00000000
+000083 e020                      			ldi	contador,0b00000000	
+000084 ec88                      			ldi 	timer2,delay
+000085 ec78                      			ldi	timer3,delay
+000086 e001                      			ldi 	r16,0b00000001
+000087 2e30                      			mov	r3,r16					
+000088 9478                      			sei	
+000089 9508                      			ret					; Indica o fim da funçao e vai pra a linha assegir de Call inic
                                  
                                  ;---------------------------Programa Principal--------------------------
-                                 
-                                 
-                                 
                                  main:		
                                  
-00007d ef0f                      			ldi		r16,0xff			;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
-00007e bf0d                      			out		spl,r16
-00007f e100                      			ldi		r16,0x10
-000080 bf0e                      			out		sph,r16
-000081 940e 004c                 			call	inic				; É como se fosse uma funçao vai para a primeira linha do inic  						
+00008a ef0f                      			ldi		r16,0xff		;Deste modo escreve na ram de baixo para cima .  spl e sph servem para escrever o endereço 0x10ff num sistema em que so temos 8bits. 
+00008b bf0d                      			out		spl,r16
+00008c e100                      			ldi		r16,0x10
+00008d bf0e                      			out		sph,r16
+00008e 940e 004c                 			call		inic			; É como se fosse uma funçao vai para a primeira linha do inic  						
                                  			
-                                 cicloini0:	
+                                 cicloini0:				
+000090 940c 0090                 			jmp		cicloini0
                                  			
-000083 940c 0083                 			jmp		cicloini0
-                                 
-                                 numerosv2:		
-000085 938f                      			push	r24
-000086 936f                      			push	r22
-000087 e260                      			ldi		r22,0x20
-000088 e2c0                      			ldi		yl,0x20
-                                 			;vai mudar o display que mostramos :)	
-                                 			;cpi		yl,0x21
-                                 			;breq	reset5
-000089 9189                      tag1:		LD		r24,y+
-00008a bb82                      			OUT		PORTD,r24
-00008b bb88                      			out		PORTB,r24
-                                 			;------------
-00008c 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
-00008d 9134                      			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
-00008e bb35                      			out		PORTC,display	;
-00008f e8ec                      			ldi		zl,low(table*2) ; COLOCA O APONTADOR DA MEMORIA EM ZERO	
-000090 916f                      			pop		r22
-000091 918f                      			pop		r24
-000092 9508                      			ret	
-                                 int_int0:
-000093 94e8                      			bclr	6 ; limpa a flag
+                                 numerosv3:		;--------display----------------------
+000092 930f                      			push		r16
+000093 936f                      			push		r22
+000094 e260                      			ldi		r22,0x20			
+000095 32c3                      			cpi		yl,0x23
+000096 f061                      			breq		reset5
+000097 9109                      tag1:			LD		r16,y+
+000098 bb02                      			OUT		PORTD,r16
+                                 			;----
+000099 1bc6                      			sub		yl,r22 			; assim so uso um apontador
+00009a 8128                      			LD		contador,y
+00009b 0fe2                      			add		zl,contador		;soma o numero que se vai querer colocar no display 			
+00009c 9134                      			lpm		display,z		;vai ao local da memoria e carrega o o valor que la estiver
+00009d bb35                      			out		PORTC,display		;
+00009e e8ec                      			ldi		zl,low(table*2) 	; COLOCA O APONTADOR DA MEMORIA EM ZERO	
+00009f 0fc6                      			add		yl,r22		
+0000a0 916f                      			pop		r22
+0000a1 910f                      			pop		r16
+0000a2 9508                      			ret	
+0000a3 e2c0                      reset5:			ldi		yl,0x20
+0000a4 940c 0097                 			jmp		tag1			
+                                 			;----------------------------------------
+                                 int_int0:	
+0000a6 930f                      			push		r16
+0000a7 2d03                      			mov		r16,flag
                                  			
-000094 bbdb                      			out			PORTA,r29			
-000095 9518                      			reti
+0000a8 7f0e                      			cbr		r16,0b00000001			
+0000a9 2e30                      			mov		flag,r16	
+0000aa 910f                      			pop		r16		
+0000ab 9518                      			reti
+                                 int_int1:											
+0000ac 930f                      			push		r16			
+0000ad 2d03                      			mov		r16,flag
+0000ae 6002                      			sbr		r16,0b00000010 ;se 0b00000001 para de contar		
+0000af 2e30                      			mov		flag,r16		;activa a flag1				
+0000b0 940e 00b4                 			call		parar_dig		
+0000b2 910f                      			pop		r16
+0000b3 9518                      			reti
                                  
-                                 int_int1:
-                                 		
-                                 			;ldi temp,0
-                                 			;out tccr0,temp ; vamos querer o temporisador a trabalhar na mesma 
-                                 			; temos de fazer piscar usnado um delay 3 s
-                                 			;sbiw x decrementa uma word 
-000096 9468                      			bset		6 ; activa a flag
-000097 bb1b                      			out			PORTA,r17
-000098 9518                      			reti
+                                 parar_dig:		;---------------para um digito e mete outro a rolar---------
+0000b4 930f                      			push		r16
+0000b5 931f                      			push		r17
+0000b6 932f                      			push		r18
+0000b7 2f2c                      			mov		r18,yl						
+0000b8 e1cb                      			ldi		yl,m_p1			;m_p1 é onde guardo a posiçao da memoria que quero ler neste programa ou seja é uma variavel	
+0000b9 8108                      			ld		r16,y			;guardo um valor no r17			
+0000ba 2fc0                      			mov		yl,r16			;carrega o valor que estava guardado no m_p1 que era a posiçao de memoria guardada			
+0000bb e000                      			ldi		r16,0			;desativa a contagem
+0000bc 9309                      			st		y+,r16			;aqui vai escrever de modo a que o display actual pare de contar e o seguinte se ligue e que começe a contar
+0000bd e001                      			ldi		r16,1			;activa a contagem
+0000be e210                      			ldi		r17,0x20		;preciso de outro registo pois o cpse so compara se tiver 2 registos e como so da skip a uma linha nao dava pois preciso de fazer o ldi do r16 antes de fazer o ld
+0000bf 13c1                      			cpse		yl,r17			;Aqui verifico se ja parei o 3 digito se sim entao nao é preciso escrever mais nada alias se deixar escrever ele vai escrever por cima da memoria que indica qual display representa o digito1
+0000c0 8308                      			st		y,r16			;indica que vai incrementar
+0000c1 2f0c                      			mov		r16,yl			;guardo a posiçao actual num registo
+0000c2 e1cb                      			ldi		yl,m_p1			;aponto para a variavel m_p1
+0000c3 8308                      			st		y,r16			;gravo na varivel m_p1 a posiçao em que fiquei neste cilco
+0000c4 2fc2                      			mov		yl,r18			;volata a apontar para a posiçao que tinha antes de entrar neste programa 
+0000c5 912f                      			pop		r18
+0000c6 911f                      			pop		r17
+0000c7 910f                      			pop		r16
+0000c8 9508                      			ret
+                                 			;-----------------------------------------------------------
+                                 int_tc0:	
+0000c9 954a                      			dec		cnt_int
+0000ca f449                      			brne		f_int			; verifica se é 0
+0000cb e045                      			ldi		cnt_int,tempo1		;rest ao contador de 5ms			
+0000cc 940e 0092                 			call		numerosv3		;mostra os numeros
+0000ce 936f                      			push		r22
+0000cf 2d63                      			mov		r22,flag
+0000d0 ff60                      			sbrs		r22,0			;verifica se ja carregamos no butao para começar
+0000d1 940e 00d5                 			call		modo1					 
+0000d3 916f                      			pop		r22					
+0000d4 9518                      f_int:			reti
+                                 								
+                                 Modo1:			
+0000d5 940e 00d8                 			call		incre					
+0000d7 9508                      			ret
+                                 			;-------------incrementa---------------
+                                 incre:			;pop		r22;VEM DE TRAS
+0000d8 930f                      			push		r16
+0000d9 931f                      			push		r17
+0000da 932f                      			push		r18
+0000db e020                      			ldi		r18,0			;serve para n ter de escrever um codigo especial para o brne
+                                 			;---Verifica se é para incrementar			
+0000dc e014                      			ldi		r17,0x4			;vai servir para apontar para o sitio certo pois eu estou a apontar para 0x20 mas quero apontar para 0x1c
+0000dd 1bc1                      			sub		yl,r17			
+0000de 8108                      			ld		r16,y
                                  
-                                 int_tc0:
-000099 954a                      			dec		cnt_int
-00009a f449                      			brne	f_int			; verifica se é 0
-00009b e045                      			ldi		cnt_int,tempo1
+0000df 3001                      			cpi		r16,1	
+0000e0 f439                      			brne		skip0
+                                 			;----------
+                                 			;ldi		r17,4
+0000e1 e12c                      			ldi		r18,0x1c		;quero apontar  para 0x00	
+0000e2 1bc2                      			sub		yl,r18			
+0000e3 8108                      			ld		r16,y
+0000e4 9503                      			inc		r16
+0000e5 300a                      			cpi		r16,10
+0000e6 f43c                      			brge		increreset		; deste modo garanto que fasso reset ao numero mesmo que este seja maior que 10		
+0000e7 8308                      tag3:			st		y,r16
+0000e8 0f12                      skip0:			add		r17,r18			; deste modo asseguro que acabo com o apontador em 0x20 pois se saltar so preciso de sumar 4 (r18 vai ser 0 logo isto da)			
+0000e9 0fc1                      			add		yl,r17
+0000ea 912f                      			pop		r18
+0000eb 911f                      			pop		r17
+0000ec 910f                      			pop		r16			
+0000ed 9508                      			ret
                                  
-00009c 940e 0085                 			call	numerosv2			
-00009e f40e                      			brtc	salto1 ; caso nao tenha carregado para parar vai para o salto 1
-                                 			;dec     timer2
-                                 			;brne	reset3
-00009f 9518                      			reti
-                                 			;set					;activa a flag t escrever a qui o codigo
-                                 
-0000a0 9523                      salto1:		inc		contador
-                                 
-0000a1 302a                      			cpi		contador,10
-0000a2 f029                      			breq	reset
-0000a3 9518                      			reti
-                                 
-                                 f_int:		
-0000a4 9518                      			reti
-                                 
-                                 reset5:		
-0000a5 8368                      			st		y,r22   ;rest do apontador
-0000a6 940c 0089                 			jmp		tag1
-                                 
-0000a8 e020                      reset:		ldi		contador,0
-0000a9 9518                      			reti
-                                 
-0000aa e020                      reset2:		ldi		contador,0
-0000ab e0b0                      			ldi		xh,high(6) ;3segundos por 600
-0000ac e0a6                      			ldi		xl,low(6)
-0000ad 940e 0085                 			call	numerosv2
-0000af 9518                      			reti
-                                 
-0000b0 932f                      reset3:		push contador
-0000b1 e02a                      			ldi	 contador,10		
-0000b2 940e 0085                 			call numerosv2
-0000b4 912f                      			pop	contador
-0000b5 958a                      			dec timer3
-0000b6 f7c9                      			brne reset3
-0000b7 9518                      			reti
-                                 			
-0000b8 ec88                      reset4:		ldi timer3,delay
-0000b9 ec78                      			ldi timer2,delay
-0000ba 9518                      			reti
+0000ee e000                      increreset: 		ldi		r16,0
+0000ef 940c 00e7                 			jmp		tag3			
 
 
 RESOURCE USE INFORMATION
@@ -1538,40 +1591,40 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega128" register use summary:
-x  :   0 y  :   5 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   7 y  :  12 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   6 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  10 r17:   5 r18:   9 r19:   8 r20:   3 
-r21:   0 r22:   5 r23:   2 r24:   8 r25:  13 r26:   2 r27:   2 r28:   5 
-r29:   4 r30:   3 r31:   1 
-Registers used: 17 out of 35 (48.6%)
+r13:   0 r14:   0 r15:   0 r16:  45 r17:  17 r18:  13 r19:  20 r20:   3 
+r21:   0 r22:  10 r23:   1 r24:   1 r25:  11 r26:   4 r27:   1 r28:  16 
+r29:   1 r30:   3 r31:   1 
+Registers used: 19 out of 35 (54.3%)
 
 "ATmega128" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
-andi  :   0 asr   :   0 bclr  :   1 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
+.lds  :   0 .sts  :   0 adc   :   0 add   :   4 adiw  :   0 and   :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   1 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   2 brpl  :   0 brsh  :   0 brtc  :   1 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   2 bst   :   0 call  :   4 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
+brne  :   2 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   5 cbi   :   0 cbr   :   1 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   1 cpse  :   0 dec   :   2 elpm  :   0 eor   :   0 fmul  :   0 
+cpi   :   3 cpse  :   1 dec   :   1 elpm  :   0 eor   :   0 fmul  :   0 
 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   1 
-jmp   :   6 ld    :   1 ldd   :   0 ldi   :  38 lds   :   0 lpm   :   2 
-lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 
-mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  20 
-pop   :   3 push  :   3 rcall :   0 ret   :   2 reti  :   9 rjmp  :   0 
+jmp   :   7 ld    :   5 ldd   :   0 ldi   :  48 lds   :   0 lpm   :   2 
+lsl   :   0 lsr   :   0 mov   :  10 movw  :   0 mul   :   0 muls  :   0 
+mulsu :   0 neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  16 
+pop   :  11 push  :  11 rcall :   0 ret   :   5 reti  :   3 rjmp  :   0 
 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 
-sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
+sbis  :   0 sbiw  :   0 sbr   :   1 sbrc  :   0 sbrs  :   1 sec   :   0 
 seh   :   0 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 
-sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :   4 std   :   0 
-sts   :   1 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
+sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :  14 std   :   0 
+sts   :   1 sub   :   3 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
-Instructions used: 25 out of 114 (21.9%)
+Instructions used: 28 out of 114 (24.6%)
 
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000176    238     12    250  131072   0.2%
+[.cseg] 0x000000 0x0001e2    346     12    358  131072   0.3%
 [.dseg] 0x000100 0x000100      0      0      0    4096   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 

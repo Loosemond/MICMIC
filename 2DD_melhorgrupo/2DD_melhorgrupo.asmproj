@@ -108,6 +108,9 @@
     <Compile Include="slot.asm">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="t1F2correr.asm">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="led_3.s">
