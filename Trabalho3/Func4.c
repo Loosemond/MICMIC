@@ -17,7 +17,7 @@ typedef struct USARTRX
 	unsigned char error:	1;
 }USARTRX_st;
 
-volatile USARTRX_st rxUSART={0,0,0,0}; // inicializar varíavel
+volatile USARTRX_st rxUSART={0,0,0,0}; // inicializar varï¿½avel
 char transmit_buffer[35];
 
 const unsigned char digitos[] = {0xc0, 0xf9 ,0xa4 ,0xb0 , 0x99 , 0x92 ,0x82 ,0xf8 ,0x80 ,0x90,0xff,0xBF};
@@ -31,7 +31,7 @@ const unsigned char motorpp[] = {0b00000001,0b00001001,0b00001000,0b00001100,0b0
 volatile unsigned int _5ms;
 unsigned int passo,increm,posicao,direcaopp,reset_pos; // guarda o passo atual do motor
 int flush = 0;
-/////Prototipo das funções//////
+/////Prototipo das funï¿½ï¿½es//////
 void send_message(char *buffer);
 ////////////////////////////////
 
@@ -75,17 +75,19 @@ void escolhe_dig(unsigned char numero)
 
 void instrucoes(void)
 {
-	sprintf(transmit_buffer," Modo digital\r\n");
+	sprintf(transmit_buffer," Motor passo a passo\r\n");
 	send_message(transmit_buffer);
 	transmit_buffer[0]=12; //limpa a consola
 	send_message(transmit_buffer);
-	sprintf(transmit_buffer,"Teclas 1,2,3,4 mudam a velocidade \r\n");
+	sprintf(transmit_buffer,"Teclas:\r\n1- Half step  \r\n");
 	send_message(transmit_buffer);
-	sprintf(transmit_buffer,"i - Inverte \r\n");
+	sprintf(transmit_buffer,"2- Full step \r\n");
 	send_message(transmit_buffer);
-	sprintf(transmit_buffer,"c - Mostra o duty cicle \r\n");
+	sprintf(transmit_buffer,"R e L - Rotacao direita e esquerda \r\n");
 	send_message(transmit_buffer);
-	sprintf(transmit_buffer,"p - Para o motor \r\n");
+	sprintf(transmit_buffer,"Z- Posicao 0 \r\n");
+	send_message(transmit_buffer);
+	sprintf(transmit_buffer,"S- Definir Z \r\n");
 	send_message(transmit_buffer);
 }
 
@@ -108,7 +110,7 @@ void inic(void)
 	UBRR1H=0b0001; //0b0001
 	UBRR1L=0b10100000; //0b10100000;
 	UCSR1A=(1<<U2X1);
-	UCSR1B=(1<<RXCIE1)|(1<<RXEN1)|(1<<TXEN1); //recepção, transmissão e interrupção recepção
+	UCSR1B=(1<<RXCIE1)|(1<<RXEN1)|(1<<TXEN1); //recepï¿½ï¿½o, transmissï¿½o e interrupï¿½ï¿½o recepï¿½ï¿½o
 	UCSR1C=0b00000110;
 //--------------------------------	
 	OCR0 =77;//77
@@ -162,11 +164,18 @@ void receive(void)
 }
 
 
-int rodar_motorpp(int increm,int passo,int direcaopp)  // vai indicar que passo é que o motor tem de fazer 
+int rodar_motorpp(int increm,int passo,int direcaopp)  // vai indicar que passo ï¿½ que o motor tem de fazer 
 {	
 	if (direcaopp==1){
-		passo = passo + increm;
-		if (passo > 7){passo=passo-7;}
+
+		if (passo == 7 && increm== 1){passo=0;}
+		else if (passo == 7 && increm == 2){passo=1;}
+		else if (passo == 6 && increm == 2 ){passo=1;}
+		else
+		{
+			passo = passo + increm;
+		}
+
 	}else
 	{	
 		if (passo == 1 && increm == 2){passo=7;}
@@ -218,7 +227,7 @@ int main(void)
 	SysStatus=1;
 	unsigned char DisplayStatus=1;
 	sentido=0;
-	passo=0; // soponho que o motor começa no passo 0 		
+	passo=0; // soponho que o motor comeï¿½a no passo 0 		
     /* Replace with your application code */
 	increm=2;// 1 half step 2 full
     while (1) 
@@ -259,20 +268,46 @@ int main(void)
 				{
 					case 'r' :
 					if (timer_motor==5 && posicao<40){
-						direcaopp=1;
-						posicao+=increm;
-						timer_motor=0;
-						passo=rodar_motorpp(increm,passo,direcaopp);
+						if (increm!=1 && posicao==39)
+						{
+							direcaopp=1;
+							posicao+=1;
+							timer_motor=0;
+							passo=rodar_motorpp(increm,passo,direcaopp);
+							
+						}else{
+							direcaopp=1;
+							posicao+=increm;
+							timer_motor=0;
+							passo=rodar_motorpp(increm,passo,direcaopp);
+
+						}
+							//sprintf(transmit_buffer," %d  \r\n", posicao);
+							//send_message(transmit_buffer);
 					}
 					
 					break;
 					
 					case 'l':
 					if (timer_motor==5 && posicao>0){
-						direcaopp=0;
-						posicao-=increm;
-						timer_motor=0;
-						passo=rodar_motorpp(increm,passo,direcaopp);
+						
+						if (increm!=1 && posicao==1)
+						{
+							
+							direcaopp=0;
+							posicao-=1;
+							timer_motor=0;
+							passo=rodar_motorpp(increm,passo,direcaopp);
+							
+							}else{
+							direcaopp=0;
+							posicao-=increm;
+							timer_motor=0;
+							passo=rodar_motorpp(increm,passo,direcaopp);
+						}
+							//sprintf(transmit_buffer," %d \r\n", posicao);
+							//send_message(transmit_buffer);
+
 					}
 					break;
 					
@@ -287,23 +322,13 @@ int main(void)
 					case '1':
 					increm=1;
 					break;
-					
-					case 112:     // escrever codigo para ter um delay de modo a n se poder iniciar logo a marcha !!!!!!!!!!
-					display[0]=10;
-					display[1]=10;
-					display[2]=10;
-					velo=0;
-					//escolhe_dig(12);
-					//display[]=10;
-					PORTB=0b00000000;
-					sentido=0;// faco reset ao sentido
-					//inverter[0]=2 //para dar reset ao sentido de rotação do motor
-					break;
-					
+
 					case 'z':
 					
 					flush=1; // para a leitura de input
 					reset_pos=1;
+					//sprintf(transmit_buffer," %d \r\n", posicao);
+					//send_message(transmit_buffer);
 					break;
 					
 				}
@@ -384,7 +409,7 @@ ISR(USART1_RX_vect)
 {
 	rxUSART.status = UCSR1A; //guardar flags
 	
-	if ( rxUSART.status & ((1<<FE1) | (1<<DOR1) | (1>> UPE1))) //verificar erros na recepção
+	if ( rxUSART.status & ((1<<FE1) | (1<<DOR1) | (1>> UPE1))) //verificar erros na recepï¿½ï¿½o
 		rxUSART.error = 1;
 	rxUSART.receiver_buffer = UDR1;
 	rxUSART.receive = 1; 
